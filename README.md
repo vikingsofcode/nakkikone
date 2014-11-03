@@ -9,6 +9,6 @@ git clone https://github.com/vikingsofcode/nakkikone.git <project name>
 cd <project name>
 npm install
 bower install
-gulp
+gulp start
 Check the console for external ip address and open it in your browser.
 ```
