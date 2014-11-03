@@ -1,6 +1,6 @@
 # Nakkikone
 
-## Built with [Hapi](http://hapijs.com), ??? and [Mongo](http://mongodb.org)
+## Built with [Hapi](http://hapijs.com), [AngularJS](http://angularjs.com) and [Mongo](http://mongodb.org)
 ```
 git clone https://github.com/vikingsofcode/nakkikone.git <project name>
 cd <project name>
