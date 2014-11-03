@@ -1,5 +1,4 @@
-# nakkikone
-Best EU nakkikone
+# Nakkikone
 
 ## Built with [Hapi](http://hapijs.com), [AngularJS](http://angularjs.com) and [Mongo](http://mongodb.org)
 ```
