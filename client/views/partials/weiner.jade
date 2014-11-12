@@ -1,0 +1,11 @@
+.left
+  .user
+    span.user-name {{nakki.username}}
+    input(type='text' ng-model='nakki.text')
+    button.btn.btn-block(ng-click='addWeiner(nakki)') nakita
+.right
+  .user
+    span.user-name Weinerer9000
+    .user-weiners
+      .weiner(ng-repeat='weiner in weiners')
+        span {{weiner}}

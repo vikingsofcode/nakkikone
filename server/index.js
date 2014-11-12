@@ -20,10 +20,14 @@ var manifest = {
     },
   ],
   plugins: {
+    'bell': {},
+    'hapi-auth-cookie': {},
     'visionary': {
       engines: { jade: 'jade' },
       path: path.join(__dirname, '../client/')
     },
+    './plugins/auth': {},
+    './plugins/api/login': { basePath: '/api' },
     './plugins/web/index': {}
   }
 };

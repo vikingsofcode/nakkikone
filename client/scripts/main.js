@@ -13,6 +13,10 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider', function($ro
     .when('/', {
       templateUrl: views + 'front',
       controller:  'frontController'
+    })
+    .when('/weiner', {
+      templateUrl: views + 'weiner',
+      controller: 'weinerController'
     });
   
   // $locationProvider.html5Mode(true);
@@ -20,5 +24,19 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider', function($ro
 
 app.controller('frontController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', function($scope, $resource, $http, $routeParams, $route, $q, $location) {
   $scope.check = "It works, it works!";
+
+}]);
+
+app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', function($scope, $resource, $http, $routeParams, $route, $q, $location) {
+  $scope.check = "weiner";
+  $scope.nakki = {
+    username: 'Nakkipate',
+    text: 'nakki'
+  };
+  $scope.weiners = [];
+  $scope.addWeiner = function(nakki) {
+    $scope.weiners.push(nakki);
+    $scope.nakki = {username: 'Nakkipate', text: ''};
+  };
 
 }]);

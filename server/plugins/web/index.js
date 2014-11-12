@@ -8,8 +8,17 @@ exports.register = function (plugin, options, next) {
   plugin.route({
       method: 'GET',
       path: '/',
+      config: {
+        auth: {
+          strategy: 'session',
+          mode: 'try'
+        },
+        plugins: { 'hapi-auth-cookie': { redirectTo: false } }
+      },
       handler: function (request, reply) {
-          return reply.view('index');
+        console.log(request.auth);
+        console.log(request.session);
+        return reply.view('index');
       }
   });
 
@@ -38,6 +47,18 @@ exports.register = function (plugin, options, next) {
     handler: {
       directory: {
           path: imgPath
+      }
+    }
+  });
+
+  plugin.route({
+    method: 'GET',
+    path: baseUrl + 'weiner',
+    config: {
+      auth: 'session',
+      handler: function(request, reply) {
+        console.log(request);
+        reply('hola!');
       }
     }
   });
