@@ -16,12 +16,25 @@ var manifest = {
         debug: {
           request: ['error']
         }
+      },
+      cors: {
+        origin: ['localhost:6678']
       }
     },
   ],
   plugins: {
     'bell': {},
     'hapi-auth-cookie': {},
+    'yar': {
+      name: 'weiner-session',
+      cache: {
+        expiresIn: 24 * 60 * 60 * 1000
+      },
+      cookieOptions: {
+        password: 'weiner-auth',
+        isSecure: false
+      }
+    },
     'visionary': {
       engines: { jade: 'jade' },
       path: path.join(__dirname, '../client/')

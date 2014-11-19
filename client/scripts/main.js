@@ -22,18 +22,53 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider', function($ro
   // $locationProvider.html5Mode(true);
 }]);
 
-app.controller('frontController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', function($scope, $resource, $http, $routeParams, $route, $q, $location) {
+app.factory('loginService', ['$resource', function ($resource) {
+  var api = $resource(null, {id: '@id'}, {
+    checkAuth: {
+      method: 'GET',
+      url: '/api/weiner'
+    }
+  });
+  return api;
+}]);
+
+
+app.controller('frontController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', 'loginService', function($scope, $resource, $http, $routeParams, $route, $q, $location, loginService) {
   $scope.check = "It works, it works!";
+  $scope.getAuthPromise = loginService.checkAuth().$promise;
+
+  $scope.getAuthPromise.then(function(result) {
+    if(result.userId) {
+      $scope.auth = result;
+      $location.path('/weiner');
+    } else {
+      $scope.auth = result;
+      $location.path('/');
+    }
+  });
 
 }]);
 
-app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', function($scope, $resource, $http, $routeParams, $route, $q, $location) {
+app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', 'loginService',function($scope, $resource, $http, $routeParams, $route, $q, $location, loginService) {
   $scope.check = "weiner";
+  
+  $scope.getAuthPromise = loginService.checkAuth().$promise;
+  $scope.getAuthPromise.then(function(result) {
+    if(!result.userId) {
+      $location.path('/');
+    }
+    $scope.user = result;
+    console.log(result);
+  });
+
+
   $scope.nakki = {
     username: 'Nakkipate',
     text: 'nakki'
   };
+
   $scope.weiners = [];
+
   $scope.addWeiner = function(nakki) {
     $scope.weiners.push(nakki);
     $scope.nakki = {username: 'Nakkipate', text: ''};

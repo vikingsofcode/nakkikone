@@ -6,39 +6,30 @@ exports.register = function (plugin, options, next) {
 
     options = Hoek.applyToDefaults({ basePath: '' }, options);
 
-    //app cache to store user information once logged in.
-    var cache = plugin.cache({
-        expiresIn: 3 * 24 * 60 * 60 * 1000
-    });
-    plugin.app.cache = cache;
-
-    //Bind the object to the plugin to be accessible in handlers
-    plugin.bind({
-        cache: plugin.app.cache
-    });
-
     plugin.route({
-        method: 'GET',
+        method: ['GET', 'POST'],
         path: options.basePath + '/login',
         config: {
-            auth: 'github', 
+            auth: 'github',
             handler: function(request, reply) {
                 var account = request.auth.credentials;
                 var sid = account.profile.id.toString();
-                //cache object bounded to the plugin is available here.
-                this.cache.set(sid, {
-                    account: account
-                }, 0, function(err) {
-                    if (err) {
-                        reply(err);
-                    }
-                    request.auth.session.set({
-                        sid: sid
-                    });
-                    return reply.redirect('/#/weiner');
-                });
+                request.session.set('weiner-auth', {userId: sid});
+                return reply(request.session.get('weiner-auth')).redirect('#/weiner');
             }
         }
+    });
+
+
+    plugin.route({
+      method: 'GET',
+      path: options.basePath + '/weiner',
+      handler: function(request, reply) {
+        if(!request.session.get('weiner-auth')) {
+          return reply.redirect('/');
+        }
+        return reply(request.session.get('weiner-auth'));
+      }
     });
 
     next();
