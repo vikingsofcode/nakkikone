@@ -1,2 +1,5 @@
 .page-container(ng-show='auth.$resolved && !auth.userId')
-  a(href='/api/login') Log in with GitHub
+  .login
+    a.block(href='/api/login')
+      i.fa.fa-github
+      |  Log in with GitHub

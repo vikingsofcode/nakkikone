@@ -1,11 +1,23 @@
-.left
-  .user
-    span.user-name {{user}}
-    input(type='text' ng-model='nakki.text')
-    button.btn.btn-block(ng-click='addWeiner(nakki)') nakita
-.right
-  .user
-    span.user-name Weinerer9000
-    .user-weiners
-      .weiner(ng-repeat='weiner in weiners')
-        span {{weiner}}
+header.header
+  .header-user
+    span.user-image
+      img(ng-src='{{user.avatar}}')
+    span.user-name 
+      span(ng-if='user.displayName') {{user.displayName}}
+      span(ng-if='!user.displayName') {{user.username}}
+  .header-logout
+    a.btn.btn-block.btn-logout(href='/api/logout') 
+      span Kirjaudu ulos
+
+.weiner
+  .weiner-left
+    .user
+      input(type='text' ng-model='nakki.text' placeholder='Kirjoita nakitettava asia')
+      button.btn.btn-block.btn-weiner(ng-click='addWeiner(nakki)') nakita
+  .weiner-right
+    .user
+      span.user-name Weinerer9000
+      .user-weiners
+        .weiner(ng-repeat='weiner in weiners')
+          span.who-weiner {{weiner.username}} nakitti:  
+          span.block.weiner-text {{weiner.text}}

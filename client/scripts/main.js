@@ -49,7 +49,7 @@ app.controller('frontController', ['$scope', '$resource', '$http', '$routeParams
 
 }]);
 
-app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', 'loginService',function($scope, $resource, $http, $routeParams, $route, $q, $location, loginService) {
+app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', 'loginService', function($scope, $resource, $http, $routeParams, $route, $q, $location, loginService) {
   $scope.check = "weiner";
   
   $scope.getAuthPromise = loginService.checkAuth().$promise;
@@ -58,20 +58,19 @@ app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParam
       $location.path('/');
     }
     $scope.user = result;
-    console.log(result);
+    $scope.nakki = {
+      username: $scope.user.username,
+      text: ''
+    };
   });
-
-
-  $scope.nakki = {
-    username: 'Nakkipate',
-    text: 'nakki'
-  };
+  
 
   $scope.weiners = [];
 
   $scope.addWeiner = function(nakki) {
     $scope.weiners.push(nakki);
-    $scope.nakki = {username: 'Nakkipate', text: ''};
+    $scope.nakki = {username: $scope.user.username, text: ''};
   };
+
 
 }]);
