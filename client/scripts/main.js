@@ -2,7 +2,7 @@ require('angular');
 require('angular-route');
 require('angular-resource');
 require('angular-animate');
-var views = '/views/';
+var views = 'views/';
 
 angular.module('nakkikone', ['ngRoute', 'ngResource', 'ngAnimate', 'weiner']);
 
@@ -26,7 +26,7 @@ app.factory('loginService', ['$resource', function ($resource) {
   var api = $resource(null, {id: '@id'}, {
     checkAuth: {
       method: 'GET',
-      url: '/api/weiner'
+      url: 'api/weiner'
     }
   });
   return api;
