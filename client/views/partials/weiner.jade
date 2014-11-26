@@ -10,14 +10,21 @@ header.header
       span Kirjaudu ulos
 
 .weiner
-  .weiner-left
+  .weiner-left.col-20
+    .user-list
+      .list-item(ng-repeat='user in users' ng-click='addToWeinerList()')
+        span {{user.username}}
+  .weiner-center.col-60
     .user
-      input(type='text' ng-model='nakki.text' placeholder='Kirjoita nakitettava asia')
+      .weiner(ng-repeat='weiner in nakki.users')
+        | {{weiner.username}}
+      input(type='text' ng-model='nakki.content' placeholder='Kirjoita nakitettava asia')
       button.btn.btn-block.btn-weiner(ng-click='addWeiner(nakki)') nakita
-  .weiner-right
+  .weiner-right.col-20
     .user
-      span.user-name Weinerer9000
       .user-weiners
         .weiner(ng-repeat='weiner in weiners')
-          span.who-weiner {{weiner.username}} nakitti:  
-          span.block.weiner-text {{weiner.text}}
+          span.who-weiner {{weiner.weinerFrom.username}} nakitti:
+          span.block.weiner-text {{weiner.content}} 
+          span.user-image.inline-block(ng-repeat='user in weiner.weinerTo')
+            img(ng-src='{{user.avatar}}')

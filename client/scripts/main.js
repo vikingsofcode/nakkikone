@@ -32,6 +32,32 @@ app.factory('loginService', ['$resource', function ($resource) {
   return api;
 }]);
 
+app.factory('userService', ['$resource', function ($resource) {
+  var api = $resource(null, {id: '@id'}, {
+    getUsers: {
+      method: 'GET',
+      url: 'api/users',
+      isArray: true
+    }
+  });
+  return api;
+}]);
+
+app.factory('weinerService', ['$resource', function ($resource) {
+  var api = $resource(null, {id: '@id'}, {
+    getWeiners: {
+      method: 'GET',
+      url: 'api/weiners',
+      isArray: true
+    },
+    saveWeiner: {
+      method: 'POST',
+      url: 'api/weiners'
+    }
+  });
+  return api;
+}]);
+
 
 app.controller('frontController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', 'loginService', function($scope, $resource, $http, $routeParams, $route, $q, $location, loginService) {
   $scope.check = "It works, it works!";
@@ -49,27 +75,46 @@ app.controller('frontController', ['$scope', '$resource', '$http', '$routeParams
 
 }]);
 
-app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', 'loginService', function($scope, $resource, $http, $routeParams, $route, $q, $location, loginService) {
-  $scope.check = "weiner";
-  
+app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', 'loginService', 'userService', 'weinerService', function($scope, $resource, $http, $routeParams, $route, $q, $location, loginService, userService, weinerService) {
   $scope.getAuthPromise = loginService.checkAuth().$promise;
+  $scope.getUsersPromise = userService.getUsers().$promise;
+  $scope.getWeinersPromise = weinerService.getWeiners().$promise;
+
   $scope.getAuthPromise.then(function(result) {
     if(!result.userId) {
       $location.path('/');
     }
     $scope.user = result;
     $scope.nakki = {
-      username: $scope.user.username,
-      text: ''
+      weinerFrom: {
+        userid:    $scope.user._id,
+        username:  $scope.user.username
+      },
+      content: '',
+      weinerTo: []
     };
   });
   
+  $scope.getUsersPromise.then(function(result) {
+    $scope.users = result;
+  });
 
-  $scope.weiners = [];
+  $scope.getWeinersPromise.then(function(result) {
+    $scope.weiners = result;
+  });
+
+  $scope.addToWeinerList = function() {
+    var doc = {
+      id: this.user._id,
+      avatar: this.user.avatar
+    };
+    $scope.nakki.weinerTo.push(doc);
+  }
 
   $scope.addWeiner = function(nakki) {
     $scope.weiners.push(nakki);
-    $scope.nakki = {username: $scope.user.username, text: ''};
+    weinerService.saveWeiner(nakki);
+    $scope.nakki = {weinerFrom: { userid: $scope.user._id, username: $scope.user.username}, content: '', weinerTo: []};
   };
 
 

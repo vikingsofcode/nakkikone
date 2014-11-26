@@ -9,18 +9,15 @@ var manifest = {
   servers: [
     {
       host: 'localhost',
-      port: 6678,
+      port: 6679,
       options: {
         labels: ['web'],
         security: true,
         debug: {
           request: ['error']
         }
-      },
-      cors: {
-        origin: ['localhost:6678']
       }
-    },
+    }
   ],
   plugins: {
     'bell': {},
@@ -40,7 +37,10 @@ var manifest = {
       path: path.join(__dirname, '../client/')
     },
     './plugins/auth': {},
+    './plugins/models': {},
     './plugins/api/login': { basePath: '/api' },
+    './plugins/api/user': { basePath: '/api' },
+    './plugins/api/weiner': { basePath: '/api' },
     './plugins/web/index': {}
   }
 };

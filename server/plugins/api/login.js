@@ -1,7 +1,6 @@
 var Joi = require('joi');
 var Hoek = require('hoek');
 
-
 exports.register = function (plugin, options, next) {
 
     options = Hoek.applyToDefaults({ basePath: '' }, options);
@@ -11,19 +10,37 @@ exports.register = function (plugin, options, next) {
         path: options.basePath + '/login',
         config: {
           auth: 'github',
-          handler: function(request, reply) {
-            var account = request.auth.credentials;
-            var sid = account.profile.id.toString();
-            request.session.set('weiner-auth', 
-              { 
-                userId: sid,
-                username: account.profile.username, 
-                displayName: account.profile.displayName, 
-                email: account.profile.email,
-                avatar: account.profile.raw.avatar_url
-            });
-            return reply(request.session.get('weiner-auth')).redirect('#/weiner');
-          }
+          pre: [{
+            assign: 'user',
+            method: function (request, reply) {
+              var account = request.auth.credentials;
+              var sid = account.profile.id.toString();
+              var auth = account.profile.raw;
+              var User = request.server.plugins.models.User;
+
+              User.findByUserId(sid, function (err, user) {
+                if (err) {
+                  return reply(err);
+                }
+
+                if (user === null) {
+                  User.create(auth, function (err, created) {
+                    if (err) {
+                      return reply(err);
+                    }
+                    return reply(created);
+                  });
+                } else {
+                  return reply(user);
+                }
+
+              });
+            }
+          }]
+        },
+        handler: function(request, reply) {
+          request.session.set('weiner-auth', request.pre.user);
+          return reply(request.session.get('weiner-auth')).redirect('#/weiner');
         }
     });
 

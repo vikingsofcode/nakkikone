@@ -182,8 +182,8 @@ gulp.task('watch', ['supervision'], function() {
 
   var config = {
     files: [paths.scripts.source, paths.styles.source, paths.templates.source, paths.partials.source, paths.media.source,  paths.scripts.destination, paths.styles.destination, paths.templates.destination, paths.partials.destination, paths.media.destination, paths.index.source, paths.index.destination, './build/client/bundle.js'],
-    port: 7678,
-    proxy: 'localhost:6678',
+    port: 7679,
+    proxy: 'localhost:6679',
     open: false,
     reloadDelay: 2000
   };
