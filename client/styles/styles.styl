@@ -25,6 +25,14 @@ h2
 a
   text-decoration none
 
+.user-name
+  display inline-block
+  vertical-align middle
+  border-bottom 1px solid #e7e7e7
+  width 100%
+  padding-bottom 10px
+
+
 .col
 .col-10
 .col-20
@@ -76,15 +84,6 @@ input[type="text"]
   border 1px solid #ccc
   &:focus
     outline none
-    border 1px solid #adadad
-    &::-webkit-input-placeholder
-        color transparent !important
-    &::-moz-input-placeholder
-        color transparent !important
-    &::-ms-input-placeholder
-        color transparent !important
-    &::input-placeholder
-        color transparent !important
 
 .red
   color #ef3434
@@ -101,7 +100,7 @@ input[type="text"]
 
 .divider-horizontal
   width 100%
-  border-bottom 1px dashed #ccc
+  border-bottom 1px solid #e7e7e7
   margin 15px 0
 
 .margin-top-15
@@ -155,16 +154,36 @@ input[type="text"]
   position relative
   .header-user
     background #323232
-    width 250px
+    width 20%
     height 100%
+    position relative
     display inline-block
+    z-index 100
+    .user-image
+      position absolute
+      border-radius 0
+      height 100%
+      border 0
+      margin 0
     .user-name
       display inline-block
-      vertical-align middle
       border 0
-      width auto
-      margin-left 25px
-      margin-top 10px
+      height 100%
+      padding-left 65px
+    .user-name-realname
+      font-weight 100
+      color #c7c7c7
+    .user-name-content
+      display inline-block
+      position relative
+      white-space nowrap
+      overflow hidden
+      text-overflow ellipsis
+      width 100%
+      padding-right 15px
+      top 100%
+      transform translateY(-100%)
+
   .header-logout
     display inline-block
     position absolute
@@ -184,65 +203,65 @@ input[type="text"]
     display block
     color #525252
 
-.user
-  display inline-block
-  padding 15px
-  width 375px
-  height 100%
-  border-top 3px solid #3ba2dd
-  background #fff
+.weiner-center
   input
+    display inline-block
+    padding 15px
     width 80%
+    border 0
+    font-size 1.75em
+    border-bottom 2px solid #f0f0f0
   .btn-weiner
     width 20%
     display inline-block
     padding-top 10px
     padding-bottom 10px
     margin-bottom 2px
+  .user-image
+    width 180px
+    border-radius 0
+    height 180px
 
 .user-image
   width 48px
   height 48px
   display inline-block
   vertical-align middle
-  border-radius 100%
   overflow hidden
-  border 1px solid #e7e7e7
   position relative
-  margin-top 2px
   img
     width 100%
     max-height 100%
-
-.user-name
-  display inline-block
-  vertical-align middle
-  border-bottom 1px solid #e7e7e7
-  width 100%
-  padding-bottom 10px
 
 .weiner
   background #fff
   width 100%
   height 100%
 
-
 .weiner-text
   font-style italic
   font-weight 100
 
+.weiner-center
+  background #fff
+
 .weiner-left
+.weiner-right
   display inline-block
   height 100%
-  border-right 1px solid #ccc
+  background #f7f7f7
+  overflow-y auto
+  overflow-x hidden
 
 .weiner-right
-  right 0
-  top 55px
-  display inline-block
-  height 100%
-  border-left 1px solid #ccc
-    
+  padding 10px
+  padding-bottom 65px
+  &:after
+    display block
+    content ''
+    width 100%
+    height 75px
+
 
 .checkbox
   width 25px
@@ -268,3 +287,79 @@ input[type="text"]
       height 15px
       top 4px
       left 4px
+
+.user-list
+  height 100%
+  width 100%
+  position relative
+  .list-item
+    color #727272
+    padding 15px
+    cursor pointer
+    position relative
+    &.odd
+      background #e7e7e7
+    &.added
+      pointer-events none
+      background #c7c7c7
+    &:hover
+      background #d7d7d7
+  .list-item-icon
+    text-align right
+  .list-item-name
+    white-space nowrap
+    padding-right 15px
+    padding-left 48px
+    overflow hidden
+    text-overflow ellipsis
+  .list-item-image
+    position absolute
+    top 0
+    left 0
+
+.user-weiners
+  .weiner
+    padding 15px
+    margin-bottom 10px
+
+.to-be-weinered
+  padding 15px
+  h2
+    color #727272
+    margin-bottom 15px
+
+.user-search
+  position absolute
+  bottom 55px
+  border 1px solid #e7e7e7 !important
+
+.menu-icon
+  cursor pointer
+  text-align center
+  position relative
+  height 100%
+  i
+    position relative
+    top 50%
+    transform translateY(-50%)
+  &:hover
+  &.toggle-menu
+    background #424242
+
+.menu
+  display block
+  background #424242
+  position absolute
+  z-index 99
+  transition all 300ms ease-in-out
+  top -180px
+  &.toggle-menu
+    top 55px
+  a
+    color #fff
+    width 100%
+    padding 25px
+    i
+      margin-right 15px
+    &:hover
+      background #525252

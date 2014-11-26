@@ -1,30 +1,53 @@
 header.header
   .header-user
-    span.user-image
+    span.user-image.col-10
       img(ng-src='{{user.avatar}}')
-    span.user-name 
-      span(ng-if='user.displayName') {{user.displayName}}
-      span(ng-if='!user.displayName') {{user.username}}
+    span.user-name.col-90
+      .user-name-content
+        span(ng-if='user.displayName').user-name-realname {{user.displayName}}
+        span.block.user-name-username {{user.username}}
+    span.menu-icon.col-10(ng-click='menuToggled = !menuToggled' ng-class="{'toggle-menu': menuToggled}")
+      i.fa.fa-caret-down
+  .menu.col-20(ng-class="{'toggle-menu': menuToggled}")
+    a(href='#/weiner/my/profile').block
+      i.fa.fa-user
+      | Profiili
+    a(href='#/weiner/my/weiners').block
+      i.fa.fa-send
+      | Omat nakit
+    a(href='#/weiner/my/settings').block 
+      i.fa.fa-gear
+      | Asetukset
   .header-logout
-    a.btn.btn-block.btn-logout(href='/api/logout') 
+    a.btn.btn-block.btn-logout(href='api/logout') 
       span Kirjaudu ulos
 
 .weiner
   .weiner-left.col-20
     .user-list
-      .list-item(ng-repeat='user in users' ng-click='addToWeinerList()')
-        span {{user.username}}
+      .list-item(ng-repeat='user in users | filter:{username: searchUser}' ng-class='{added: user.addedToList}' ng-click='addToWeinerList()' ng-class-odd='"odd"' ng-class-even='"even"')
+        span.list-item-image.user-image
+          img(ng-src='{{user.avatar}}')
+        span.list-item-name.col-90 {{user.username}}
+        span.list-item-icon.col-10
+          i.fa.fa-caret-square-o-right(ng-hide='user.addedToList')
+          i.fa.fa-check(ng-show='user.addedToList')
+      input.user-search.col(type='text' ng-model='searchUser' placeholder='Hae käyttäjää')
   .weiner-center.col-60
-    .user
-      .weiner(ng-repeat='weiner in nakki.users')
-        | {{weiner.username}}
-      input(type='text' ng-model='nakki.content' placeholder='Kirjoita nakitettava asia')
-      button.btn.btn-block.btn-weiner(ng-click='addWeiner(nakki)') nakita
+    .weiner
+      .block
+        input(type='text' ng-model='nakki.content' placeholder='Kirjoita nakitettava asia')
+        button.btn.btn-block.btn-weiner(ng-click='addWeiner(nakki)' ng-disabled='nakki.weinerTo.length === 0') 
+          i.fa.fa-send.fa-3x
+      .block.to-be-weinered(ng-show='nakki.weinerTo.length > 0')
+        h2 Nakitettavat
+        span.user-image.inline-block(ng-repeat='weiner in nakki.weinerTo')
+          img(ng-src='{{weiner.avatar}}')
+          span.block {{weiner.username}}
   .weiner-right.col-20
-    .user
-      .user-weiners
-        .weiner(ng-repeat='weiner in weiners')
-          span.who-weiner {{weiner.weinerFrom.username}} nakitti:
-          span.block.weiner-text {{weiner.content}} 
-          span.user-image.inline-block(ng-repeat='user in weiner.weinerTo')
-            img(ng-src='{{user.avatar}}')
+    .user-weiners
+      .weiner(ng-repeat='weiner in weiners')
+        span.who-weiner {{weiner.weinerFrom.username}} nakitti:
+        span.block.weiner-text {{weiner.content}} 
+        span.user-image.inline-block(ng-repeat='user in weiner.weinerTo')
+          img(ng-src='{{user.avatar}}')
