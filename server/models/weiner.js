@@ -1,7 +1,6 @@
 var Joi = require('joi');
 var uuid = require('node-uuid');
 var async = require('async');
-var bcrypt = require('bcrypt');
 var mongoose = require('mongoose');
 
 var Weiner = function () {
