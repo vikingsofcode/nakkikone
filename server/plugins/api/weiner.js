@@ -38,6 +38,26 @@ exports.register = function (plugin, options, next) {
         }
     });
 
+    plugin.route({
+        method: 'PUT',
+        path: options.basePath + '/weiners/{id}/done',
+        handler: function (request, reply) {
+          var id = request.payload._id;
+          var Weiner = request.server.plugins.models.Weiner;
+
+          var update = {
+            status: 'DONE'
+          };
+
+          Weiner.Model.findByIdAndUpdate(id, update, function (err, weiner) {
+            if (err) {
+              return reply(err);
+            }
+            reply(weiner);
+          });
+        }
+    });
+
     next();
 };
 

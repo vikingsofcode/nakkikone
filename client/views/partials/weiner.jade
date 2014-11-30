@@ -1,27 +1,3 @@
-header.header
-  .header-user
-    span.user-image.col-10
-      img(ng-src='{{user.avatar}}')
-    span.user-name.col-90
-      .user-name-content
-        span(ng-if='user.displayName').user-name-realname {{user.displayName}}
-        span.block.user-name-username {{user.username}}
-    span.menu-icon.col-10(ng-click='menuToggled = !menuToggled' ng-class="{'toggle-menu': menuToggled}")
-      i.fa.fa-caret-down
-  .menu.col-20(ng-class="{'toggle-menu': menuToggled}")
-    a(href='#/weiner/my/profile').block
-      i.fa.fa-user
-      | Profiili
-    a(href='#/weiner/my/weiners').block
-      i.fa.fa-send
-      | Omat nakit
-    a(href='#/weiner/my/settings').block 
-      i.fa.fa-gear
-      | Asetukset
-  .header-logout
-    a.btn.btn-block.btn-logout(href='api/logout') 
-      span Kirjaudu ulos
-
 .weiner
   .weiner-left.col-20
     .user-list
@@ -46,7 +22,8 @@ header.header
           span.block {{weiner.username}}
   .weiner-right.col-20
     .user-weiners
-      .weiner(ng-repeat='weiner in weiners')
+      .weiner(ng-repeat='weiner in weiners | orderBy:"-created"')
+        span.status {{weiner.status}}
         span.who-weiner {{weiner.weinerFrom.username}} nakitti:
         span.block.weiner-text {{weiner.content}} 
         span.user-image.inline-block(ng-repeat='user in weiner.weinerTo')

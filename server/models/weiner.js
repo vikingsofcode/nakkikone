@@ -17,7 +17,8 @@ Weiner.Schema = mongoose.Schema({
         avatar: String
     }],
     content: String,
-    created: Date
+    created: Date,
+    status: String
 });
 
 Weiner.Schema.method.validate = function(obj) {
@@ -31,7 +32,8 @@ Weiner.Schema.method.validate = function(obj) {
         avatar: Joi.string()
     }),
     content: Joi.string(),
-    created: Joi.date
+    created: Joi.date,
+    status: Joi.string()
   };
   return Joi.validate(obj, schema);
 };
@@ -49,7 +51,8 @@ Weiner.create = function (weiner, callback) {
                 weinerFrom: weiner.weinerFrom,
                 weinerTo: weiner.weinerTo,
                 content: weiner.content,
-                created: new Date()
+                created: new Date(),
+                status: weiner.status
             };
 
             var weinersave = new Weiner.Model(document);
@@ -63,48 +66,6 @@ Weiner.create = function (weiner, callback) {
 
         callback(null, results.newWeiner[0]);
     });
-};
-
-
-Weiner.findByCredentials = function (Weinername, password, callback) {
-
-    var self = this;
-
-    async.auto({
-        Weiner: function (done) {
-
-            var query = {
-                Weinername: Weinername
-            };
-
-            Weiner.Model.findOne(query, done);
-        },
-        passwordMatch: ['Weiner', function (done, results) {
-
-            if (!results.Weiner) {
-                return done(null, false);
-            }
-
-            var source = results.Weiner.password;
-            bcrypt.compare(password, source, done);
-        }]
-    }, function (err, results) {
-
-        if (err) {
-            return callback(err);
-        }
-
-        if (results.passwordMatch) {
-            return callback(null, results.Weiner);
-        }
-
-        callback();
-    });
-};
-Weiner.findByWeinername = function (Weinername, callback) {
-
-    var query = { Weinername: Weinername };
-    Weiner.Model.findOne(query, callback);
 };
 
 Weiner.findByWeinerId = function (Weinerid, callback) {

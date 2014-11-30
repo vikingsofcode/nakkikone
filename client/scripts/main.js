@@ -22,18 +22,21 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider', function($ro
     .when('/weiner/my/profile', {
       templateUrl: views + 'profile',
       controller:  'profileController'
-    })
-    .when('/weiner/my/weiners', {
-      templateUrl: views + 'weiners',
-      controller:  'myWeinersController'
-    })
-    .when('/weiner/my/settings', {
-      templateUrl: views + 'settings',
-      controller:  'settingsController'
     });
   
   // $locationProvider.html5Mode(true);
 }]);
+
+
+app.run(['$rootScope', '$location', function($rootScope, $location) {
+  $rootScope.$on('$routeChangeSuccess', function() {
+    $rootScope.showHeader = false; 
+    if($location.path() === '/weiner' || $location.path() === '/weiner/my/profile') {
+      $rootScope.showHeader = true;
+    }
+  });
+}]);
+
 
 app.factory('loginService', ['$resource', function ($resource) {
   var api = $resource(null, {id: '@id'}, {
@@ -66,6 +69,10 @@ app.factory('weinerService', ['$resource', function ($resource) {
     saveWeiner: {
       method: 'POST',
       url: 'api/weiners'
+    },
+    completeWeiner: {
+      method: 'PUT',
+      url: 'api/weiners/:id/done'
     }
   });
   return api;
@@ -104,7 +111,8 @@ app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParam
         username:  $scope.user.username
       },
       content: '',
-      weinerTo: []
+      weinerTo: [],
+      status: 'IN PROGRESS'
     };
   });
   
@@ -118,9 +126,10 @@ app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParam
 
   $scope.addToWeinerList = function() {
     var doc = {
-      id: this.user._id,
+      userid: this.user._id,
       avatar: this.user.avatar
     };
+
     this.user.addedToList = true;
     $scope.nakki.weinerTo.push(doc);
   }
@@ -128,7 +137,7 @@ app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParam
   $scope.addWeiner = function(nakki) {
     $scope.weiners.push(nakki);
     weinerService.saveWeiner(nakki);
-    $scope.nakki = {weinerFrom: { userid: $scope.user._id, username: $scope.user.username}, content: '', weinerTo: []};
+    $scope.nakki = {weinerFrom: { userid: $scope.user._id, username: $scope.user.username}, content: '', weinerTo: [], status: 'IN PROGRESS'};
     _.each($scope.users, function(user) {
       user.addedToList = false;
     });
@@ -138,50 +147,37 @@ app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParam
 
 }]);
 
-app.controller('profileController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', 'loginService', function($scope, $resource, $http, $routeParams, $route, $q, $location, loginService) {
+app.controller('profileController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', 'loginService', 'weinerService', function($scope, $resource, $http, $routeParams, $route, $q, $location, loginService, weinerService) {
   $scope.check = "It works, it works!";
   $scope.getAuthPromise = loginService.checkAuth().$promise;
+  $scope.getWeinersPromise = weinerService.getWeiners().$promise;
 
   $scope.getAuthPromise.then(function(result) {
-    if(result.userId) {
-      $scope.auth = result;
-      $location.path('/weiner/my/profile');
-    } else {
-      $scope.auth = result;
+    if(!result.userId) {
       $location.path('/');
     }
+    $scope.user = result;
+
+    $scope.getWeinersPromise.then(function(result) {
+      $scope.weiners = result;
+
+      $scope.sentWeiners = _.filter($scope.weiners, {'weinerFrom': {'userid': $scope.user._id }});
+      $scope.numSent = $scope.sentWeiners.length;
+
+      $scope.receivedWeiners = _.filter($scope.weiners, function(weiner) {
+        return _.any(weiner.weinerTo, function(weinerTo) {
+          return weinerTo.userid === $scope.user._id;
+        });
+      });
+
+      $scope.numReceived = $scope.receivedWeiners.length;
+    });
+
   });
 
-}]);
+  $scope.setDone = function() {
+    weinerService.completeWeiner({id: this.weiner._id}, this.weiner);
+  };  
 
-app.controller('myWeinersController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', 'loginService', function($scope, $resource, $http, $routeParams, $route, $q, $location, loginService) {
-  $scope.check = "It works, it works!";
-  $scope.getAuthPromise = loginService.checkAuth().$promise;
-
-  $scope.getAuthPromise.then(function(result) {
-    if(result.userId) {
-      $scope.auth = result;
-      $location.path('/weiner/my/weiners');
-    } else {
-      $scope.auth = result;
-      $location.path('/');
-    }
-  });
-
-}]);
-
-app.controller('settingsController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', 'loginService', function($scope, $resource, $http, $routeParams, $route, $q, $location, loginService) {
-  $scope.check = "It works, it works!";
-  $scope.getAuthPromise = loginService.checkAuth().$promise;
-
-  $scope.getAuthPromise.then(function(result) {
-    if(result.userId) {
-      $scope.auth = result;
-      $location.path('/weiner/my/settings');
-    } else {
-      $scope.auth = result;
-      $location.path('/');
-    }
-  });
-
+  
 }]);

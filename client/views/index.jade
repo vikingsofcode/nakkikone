@@ -8,6 +8,24 @@ html(lang="en", ng-app='nakkikone')
     link(rel='stylesheet' href='public/css/font-awesome.min.css' media='screen')
     link(rel='stylesheet' href='public/css/styles.css' media='screen')
   body
+    header.header(ng-controller='weinerController' ng-if='showHeader' ng-show='user.$resolved && user.userId')
+      .header-user
+        span.user-image.col-10
+          img(ng-src='{{user.avatar}}')
+        span.user-name.col-90
+          .user-name-content
+            span(ng-if='user.displayName').user-name-realname {{user.displayName}}
+            span.block.user-name-username {{user.username}}
+        span.menu-icon.col-10(ng-click='menuToggled = !menuToggled' ng-class="{'toggle-menu': menuToggled}")
+          i.fa.fa-caret-down
+      .menu.col-20(ng-class="{'toggle-menu': menuToggled}")
+        a.block(href='#/weiner/my/profile' ng-click='menuToggled = false')
+          i.fa.fa-user
+          | Profiili
+        a.block(href='api/logout' ng-click='menuToggled = false') 
+          i.fa.fa-sign-out
+          | Kirjaudu ulos
+        
     .container(ng-view )
 
     script(type='text/javascript' src='public/js/bundle.js')

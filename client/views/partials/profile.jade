@@ -1,1 +1,23 @@
 h1 profiili
+| Weiners sent {{numSent}}
+| Weiners received {{numReceived}}
+
+h2 Sent
+.user-weiners
+  .weiner(ng-repeat='weiner in sentWeiners | orderBy:"-created"')
+    span.who-weiner {{weiner.weinerFrom.username}} nakitti:
+    span.block.weiner-text {{weiner.content}} 
+    span.user-image.inline-block(ng-repeat='user in weiner.weinerTo')
+      img(ng-src='{{user.avatar}}')
+
+h2 Received
+.user-weiners
+  .weiner(ng-repeat='weiner in receivedWeiners | orderBy:"-created"')
+    span.status {{weiner.status}}
+    span.who-weiner {{weiner.weinerFrom.username}} nakitti:
+    span.block.weiner-text {{weiner.content}} 
+    span.user-image.inline-block(ng-repeat='user in weiner.weinerTo')
+      img(ng-src='{{user.avatar}}')
+    button.btn.btn-block.btn-weiner(ng-click='setDone()')
+      i.fa.fa-check-circle
+      | Valmis
