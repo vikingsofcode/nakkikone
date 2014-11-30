@@ -1,7 +1,6 @@
 var Joi = require('joi');
 var uuid = require('node-uuid');
 var async = require('async');
-var bcrypt = require('bcrypt');
 var mongoose = require('mongoose');
 
 var User = function () {
@@ -59,42 +58,6 @@ User.create = function (auth, callback) {
     });
 };
 
-
-User.findByCredentials = function (username, password, callback) {
-
-    var self = this;
-
-    async.auto({
-        user: function (done) {
-
-            var query = {
-                username: username
-            };
-
-            User.Model.findOne(query, done);
-        },
-        passwordMatch: ['user', function (done, results) {
-
-            if (!results.user) {
-                return done(null, false);
-            }
-
-            var source = results.user.password;
-            bcrypt.compare(password, source, done);
-        }]
-    }, function (err, results) {
-
-        if (err) {
-            return callback(err);
-        }
-
-        if (results.passwordMatch) {
-            return callback(null, results.user);
-        }
-
-        callback();
-    });
-};
 User.findByUsername = function (username, callback) {
 
     var query = { username: username };

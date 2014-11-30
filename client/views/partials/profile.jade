@@ -12,7 +12,7 @@ h2 Sent
 
 h2 Received
 .user-weiners
-  .weiner(ng-repeat='weiner in receivedWeiners | orderBy:"-created"')
+  .weiner(ng-repeat='weiner in receivedWeiners | orderBy:"-created"' ng-if='weiner.status !== "DONE"')
     span.status {{weiner.status}}
     span.who-weiner {{weiner.weinerFrom.username}} nakitti:
     span.block.weiner-text {{weiner.content}} 
