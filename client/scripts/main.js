@@ -1,13 +1,15 @@
 require('angular');
 require('angular-route');
 require('angular-resource');
+require('angular-off-click');
 // require('angular-animate');
 window._ = require('lodash');
 var views = 'views/';
 
-angular.module('nakkikone', ['ngRoute', 'ngResource', 'weiner']);
+angular.module('nakkikone', ['ngRoute', 'ngResource', 'weiner','offClick']);
 
 var app = angular.module('weiner', []);
+
 
 app.config(['$routeProvider', '$locationProvider', '$httpProvider', function($routeProvider, $locationProvider, $httpProvider) {
   $routeProvider

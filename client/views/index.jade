@@ -16,7 +16,7 @@ html(lang="en", ng-app='nakkikone')
           .user-name-content
             span(ng-if='user.displayName').user-name-realname {{user.displayName}}
             span.block.user-name-username {{user.username}}
-        span.menu-icon.col-10(ng-click='menuToggled = !menuToggled' ng-class="{'toggle-menu': menuToggled}")
+        span.menu-icon.col-10(ng-click='menuToggled = !menuToggled' ng-class="{'toggle-menu': menuToggled}" off-click='menuToggled = false')
           i.fa.fa-caret-down
       .menu.col-20(ng-class="{'toggle-menu': menuToggled}")
         a.block(href='#/weiner/my/profile' ng-click='menuToggled = false')

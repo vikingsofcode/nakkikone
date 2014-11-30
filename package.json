@@ -75,7 +75,8 @@
   "browser": {
     "angular-route": "./bower_components/angular-route/angular-route.js",
     "angular-resource": "./bower_components/angular-resource/angular-resource.js",
-    "angular-animate": "./bower_components/angular-animate/angular-animate.js"
+    "angular-animate": "./bower_components/angular-animate/angular-animate.js",
+    "angular-off-click": "./bower_components/angular-off-click/offClick.js"
   },
   "browserify-shim": {},
   "browserify": {
