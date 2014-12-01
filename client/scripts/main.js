@@ -75,6 +75,10 @@ app.factory('weinerService', ['$resource', function ($resource) {
     completeWeiner: {
       method: 'PUT',
       url: 'api/weiners/:id/done'
+    },
+    checkWeiner: {
+      method: 'PUT',
+      url: 'api/weiners/:id/check'
     }
   });
   return api;
@@ -129,7 +133,8 @@ app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParam
   $scope.addToWeinerList = function() {
     var doc = {
       userid: this.user._id,
-      avatar: this.user.avatar
+      avatar: this.user.avatar,
+      userChecked: false
     };
 
     this.user.addedToList = true;
@@ -167,15 +172,28 @@ app.controller('profileController', ['$scope', '$resource', '$http', '$routePara
       $scope.numSent = $scope.sentWeiners.length;
 
       $scope.receivedWeiners = _.filter($scope.weiners, function(weiner) {
-        return _.any(weiner.weinerTo, function(weinerTo) {
+        return _.each(weiner.weinerTo, function(weinerTo) {
           return weinerTo.userid === $scope.user._id;
         });
       });
 
       $scope.numReceived = $scope.receivedWeiners.length;
+
+      // why u no work meme ლ(ಠ益ಠლ)
+      var weinerList = _.map($scope.receivedWeiners, 'weinerTo');
+      $scope.newWeiners = _.each($scope.receivedWeiners, function(weiner) {
+        return _.reject(weiner.weinerTo, 'userChecked');
+      });
+
     });
 
   });
+
+  $scope.setChecked = function() {
+    var clickedWeiner = _.filter(this.weiner.weinerTo, {'userid': $scope.user._id});
+    clickedWeiner[0].userChecked = true;
+    weinerService.checkWeiner({id: this.weiner._id}, clickedWeiner);
+  };
 
   $scope.setDone = function() {
     weinerService.completeWeiner({id: this.weiner._id}, this.weiner);

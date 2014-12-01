@@ -12,10 +12,11 @@ h2 Sent
 
 h2 Received
 .user-weiners
-  .weiner(ng-repeat='weiner in receivedWeiners | orderBy:"-created"' ng-if='weiner.status !== "DONE"')
+  .weiner(ng-repeat='weiner in receivedWeiners | orderBy:"-created"' ng-if='weiner.status !== "DONE"' ng-click='setChecked()')
     span.status {{weiner.status}}
     span.who-weiner {{weiner.weinerFrom.username}} nakitti:
-    span.block.weiner-text {{weiner.content}} 
+    span.block.weiner-text {{weiner.content}}
+    span.block {{weiner.weinerTo.userChecked}}
     span.user-image.inline-block(ng-repeat='user in weiner.weinerTo')
       img(ng-src='{{user.avatar}}')
     button.btn.btn-block.btn-weiner(ng-click='setDone()')

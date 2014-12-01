@@ -8,7 +8,8 @@ html(lang="en", ng-app='nakkikone')
     link(rel='stylesheet' href='public/css/font-awesome.min.css' media='screen')
     link(rel='stylesheet' href='public/css/styles.css' media='screen')
   body
-    header.header(ng-controller='weinerController' ng-if='showHeader' ng-show='user.$resolved && user.userId')
+    header.header(ng-controller='profileController' ng-if='showHeader' ng-show='user.$resolved && user.userId')
+      | {{newWeiners}}
       .header-user
         span.user-image.col-10
           img(ng-src='{{user.avatar}}')

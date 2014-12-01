@@ -13,7 +13,8 @@ Weiner.Schema = mongoose.Schema({
     },
     weinerTo: [{
         userid: { type: String, index: true},
-        avatar: String
+        avatar: String,
+        userChecked: Boolean
     }],
     content: String,
     created: Date,
@@ -28,7 +29,8 @@ Weiner.Schema.method.validate = function(obj) {
     }),
     weinerTo: Joi.array().required().keys({
         userid: Joi.string(),
-        avatar: Joi.string()
+        avatar: Joi.string(),
+        userChecked: Joi.boolean()
     }),
     content: Joi.string(),
     created: Joi.date,
@@ -71,6 +73,7 @@ Weiner.findByWeinerId = function (Weinerid, callback) {
     var query = { WeinerId: Weinerid };
     Weiner.Model.findOne(query, callback);
 };
+
 
 
 module.exports = Weiner;
