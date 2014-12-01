@@ -159,32 +159,25 @@ app.controller('profileController', ['$scope', '$resource', '$http', '$routePara
   $scope.getAuthPromise = loginService.checkAuth().$promise;
   $scope.getWeinersPromise = weinerService.getWeiners().$promise;
 
-  $scope.getAuthPromise.then(function(result) {
-    if(!result.userId) {
+
+  $q.all([$scope.getAuthPromise, $scope.getWeinersPromise]).then(function(data) {
+    $scope.user = data[0];
+    $scope.weiners = data[1];
+
+    if(!$scope.user.userId) {
       $location.path('/');
     }
-    $scope.user = result;
+    $scope.sentWeiners = _.filter($scope.weiners, {'weinerFrom': {'userid': $scope.user._id }});
+    $scope.numSent = $scope.sentWeiners.length;
 
-    $scope.getWeinersPromise.then(function(result) {
-      $scope.weiners = result;
+    $scope.receivedWeiners = _.filter($scope.weiners, function(weiner) {
+      return _.any(weiner.weinerTo, {'userid': $scope.user._id});
+    });
 
-      $scope.sentWeiners = _.filter($scope.weiners, {'weinerFrom': {'userid': $scope.user._id }});
-      $scope.numSent = $scope.sentWeiners.length;
+    $scope.numReceived = $scope.receivedWeiners.length;
 
-      $scope.receivedWeiners = _.filter($scope.weiners, function(weiner) {
-        return _.each(weiner.weinerTo, function(weinerTo) {
-          return weinerTo.userid === $scope.user._id;
-        });
-      });
-
-      $scope.numReceived = $scope.receivedWeiners.length;
-
-      // why u no work meme ლ(ಠ益ಠლ)
-      var weinerList = _.map($scope.receivedWeiners, 'weinerTo');
-      $scope.newWeiners = _.each($scope.receivedWeiners, function(weiner) {
-        return _.reject(weiner.weinerTo, 'userChecked');
-      });
-
+    $scope.newWeiners = _.filter($scope.weiners, function(weiner) {
+      return _.any(weiner.weinerTo, {'userid': $scope.user._id, 'userChecked': false});
     });
 
   });
