@@ -6,16 +6,22 @@ var authPlugin = require('../auth');
 exports.register = function (plugin, options, next) {
 
     options = Hoek.applyToDefaults({ basePath: '' }, options);
-
+    
     plugin.route({
         method: 'GET',
         path: options.basePath + '/weiners',
         handler: function (request, reply) {
             var Weiner = request.server.plugins.models.Weiner;
+            var io = request.server.plugins.hapio.io;
             Weiner.Model.find(function (err, results) {
                 if (err) {
                     return reply(err);
                 }
+
+                io.emit('event:weiner:get', {weiners: results});
+                io.on('event:weiner:save', function(socket) {
+                  socket.emit('event:weiner:get', {weiners: results});
+                });
                 reply(results);
             });
         }
@@ -27,11 +33,12 @@ exports.register = function (plugin, options, next) {
         handler: function (request, reply) {
           var doc = request.payload;
           var Weiner = request.server.plugins.models.Weiner;
-
+          var io = request.server.plugins.hapio.io;
           Weiner.create(doc, function (err, weiner) {
             if (err) {
               return reply(err);
             }
+            io.emit('event:weiner:save', {weiner: weiner});
             return reply(weiner);
           });
 
@@ -44,7 +51,7 @@ exports.register = function (plugin, options, next) {
         handler: function (request, reply) {
           var id = request.payload._id;
           var Weiner = request.server.plugins.models.Weiner;
-
+          var io = request.server.plugins.hapio.io;
           var update = {
             status: 'DONE'
           };
@@ -53,6 +60,7 @@ exports.register = function (plugin, options, next) {
             if (err) {
               return reply(err);
             }
+            io.emit('event:weiner:done', {weiner: weiner});
             reply(weiner);
           });
         }
@@ -64,7 +72,7 @@ exports.register = function (plugin, options, next) {
         handler: function (request, reply) {
           var id = request.params.id;
           var Weiner = request.server.plugins.models.Weiner;
-
+          var io = request.server.plugins.hapio.io;
           var update = {
             weinerTo: [{
               _id: request.payload[0]._id,
@@ -78,6 +86,8 @@ exports.register = function (plugin, options, next) {
             if (err) {
               return reply(err);
             }
+
+            io.emit('event:weiner:check', {weiner: weiner});
             reply(weiner);
           });
         }

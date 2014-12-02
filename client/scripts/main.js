@@ -105,6 +105,10 @@ app.controller('frontController', ['$scope', '$resource', '$http', '$routeParams
 app.factory('mySocket',['socketFactory', function (socketFactory) {
   var mySocket = socketFactory();
   mySocket.forward('event:connect');
+  mySocket.forward('event:weiner:get');
+  mySocket.forward('event:weiner:save');
+  mySocket.forward('event:weiner:check');
+  mySocket.forward('event:weiner:done');
   return mySocket;
 }]);
 
@@ -133,8 +137,17 @@ app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParam
     $scope.users = result;
   });
 
-  $scope.getWeinersPromise.then(function(result) {
-    $scope.weiners = result;
+  // $scope.getWeinersPromise.then(function(result) {
+  //   $scope.weiners = result;
+
+  // });
+
+  $scope.$on('socket:event:weiner:get', function (ev, data) {
+    $scope.weiners = data.weiners;
+  });
+
+  $scope.$on('socket:event:weiner:save', function (ev, data) {
+    $scope.weiners = weinerService.getWeiners();
   });
 
   $scope.addToWeinerList = function() {
@@ -149,7 +162,7 @@ app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParam
   }
 
   $scope.addWeiner = function(nakki) {
-    $scope.weiners.push(nakki);
+    // $scope.weiners = weinerService.getWeiners();
     weinerService.saveWeiner(nakki);
     $scope.nakki = {weinerFrom: { userid: $scope.user._id, username: $scope.user.username}, content: '', weinerTo: [], status: 'IN PROGRESS'};
     _.each($scope.users, function(user) {
@@ -160,6 +173,8 @@ app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParam
   $scope.$on('socket:event:connect', function (ev, data) {
     console.log(data);
   });
+
+
 
   $scope.menuToggled = false;
 
