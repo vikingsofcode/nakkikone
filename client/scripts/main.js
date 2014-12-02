@@ -2,11 +2,12 @@ require('angular');
 require('angular-route');
 require('angular-resource');
 require('angular-off-click');
+require('angular-socket-io');
 // require('angular-animate');
 window._ = require('lodash');
 var views = 'views/';
 
-angular.module('nakkikone', ['ngRoute', 'ngResource', 'weiner','offClick']);
+angular.module('nakkikone', ['ngRoute', 'ngResource', 'weiner', 'offClick', 'btford.socket-io']);
 
 var app = angular.module('weiner', []);
 
@@ -101,7 +102,13 @@ app.controller('frontController', ['$scope', '$resource', '$http', '$routeParams
 
 }]);
 
-app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', 'loginService', 'userService', 'weinerService', function($scope, $resource, $http, $routeParams, $route, $q, $location, loginService, userService, weinerService) {
+app.factory('mySocket',['socketFactory', function (socketFactory) {
+  var mySocket = socketFactory();
+  mySocket.forward('event:connect');
+  return mySocket;
+}]);
+
+app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', 'loginService', 'userService', 'weinerService', 'mySocket', function($scope, $resource, $http, $routeParams, $route, $q, $location, loginService, userService, weinerService, mySocket) {
   $scope.getAuthPromise = loginService.checkAuth().$promise;
   $scope.getUsersPromise = userService.getUsers().$promise;
   $scope.getWeinersPromise = weinerService.getWeiners().$promise;
@@ -150,6 +157,10 @@ app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParam
     });
   };
 
+  $scope.$on('socket:event:connect', function (ev, data) {
+    console.log(data);
+  });
+
   $scope.menuToggled = false;
 
 }]);
@@ -158,8 +169,6 @@ app.controller('profileController', ['$scope', '$resource', '$http', '$routePara
   $scope.check = "It works, it works!";
   $scope.getAuthPromise = loginService.checkAuth().$promise;
   $scope.getWeinersPromise = weinerService.getWeiners().$promise;
-
-
   $q.all([$scope.getAuthPromise, $scope.getWeinersPromise]).then(function(data) {
     $scope.user = data[0];
     $scope.weiners = data[1];
@@ -179,13 +188,16 @@ app.controller('profileController', ['$scope', '$resource', '$http', '$routePara
     $scope.newWeiners = _.filter($scope.weiners, function(weiner) {
       return _.any(weiner.weinerTo, {'userid': $scope.user._id, 'userChecked': false});
     });
-
   });
 
   $scope.setChecked = function() {
-    var clickedWeiner = _.filter(this.weiner.weinerTo, {'userid': $scope.user._id});
-    clickedWeiner[0].userChecked = true;
-    weinerService.checkWeiner({id: this.weiner._id}, clickedWeiner);
+    var clickedWeiner = _.filter($scope.weiners, {'_id': this.weiner._id});
+    var setCheckedOnClicked = _.filter(clickedWeiner[0].weinerTo, {'userid': $scope.user._id});
+    setCheckedOnClicked[0].userChecked = true;
+    console.log(setCheckedOnClicked[0]);
+    _.where($scope.newWeiners, {'weinerTo': {'userid': setCheckedOnClicked[0].userid}});
+    $scope.newWeiners
+    // weinerService.checkWeiner({id: this.weiner._id}, clickedWeiner);
   };
 
   $scope.setDone = function() {

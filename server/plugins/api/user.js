@@ -12,6 +12,7 @@ exports.register = function (plugin, options, next) {
         path: options.basePath + '/users',
         handler: function (request, reply) {
             var User = request.server.plugins.models.User;
+            
             User.Model.find(function (err, results) {
                 if (err) {
                     return reply(err);

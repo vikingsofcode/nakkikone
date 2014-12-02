@@ -36,6 +36,7 @@ var manifest = {
       engines: { jade: 'jade' },
       path: path.join(__dirname, '../client/')
     },
+    'hapio': {},
     './plugins/auth': {},
     './plugins/models': {},
     './plugins/api/login': { basePath: '/api' },
@@ -47,6 +48,11 @@ var manifest = {
 
 Hapi.Pack.compose(manifest, composeOptions, function(err, pack) {
   pack.start(function() {
+    var io = pack.plugins.hapio.io;
+    io.on('connection', function(socket) {
+      socket.emit('event:connect', {msg: 'lulz'});
+      console.log(socket.id + " connected!");
+    });
     console.log('Hapi server started');
   });
 });
