@@ -50,9 +50,14 @@ exports.register = function (plugin, options, next) {
       method: 'GET',
       path: options.basePath + '/weiner',
       handler: function(request, reply) {
+
+        var io = request.server.plugins.hapio.io;
         if(!request.session.get('weiner-auth') && !request.auth.isAuthenticated) {
           return reply.redirect('/');
         }
+
+        io.emit('event:user:auth', {user: request.session.get('weiner-auth')});
+
         return reply(request.session.get('weiner-auth'));
       }
     });

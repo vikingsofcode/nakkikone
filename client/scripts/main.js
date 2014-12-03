@@ -111,6 +111,7 @@ app.factory('mySocket',['socketFactory', function (socketFactory) {
   mySocket.forward('event:weiner:done');
   mySocket.forward('event:user:get');
   mySocket.forward('event:user:create');
+  mySocket.forward('event:user:auth');
   return mySocket;
 }]);
 
@@ -230,8 +231,12 @@ app.controller('profileController', ['$scope', '$resource', '$http', '$routePara
 
   });
 
+  $scope.$on('socket:event:user:auth', function (ev, data) {
+    $scope.user = data.user;
+  });
+
   $scope.$on('socket:event:weiner:check', function (ev, data) {
-    
+
     $scope.newWeiners = _.filter($scope.weiners, function(weiner) {
       return _.any(weiner.weinerTo, {'userid': $scope.user._id, 'userChecked': false});
     }).length;
