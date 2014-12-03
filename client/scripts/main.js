@@ -231,10 +231,6 @@ app.controller('profileController', ['$scope', '$resource', '$http', '$routePara
 
   });
 
-  $scope.$on('socket:event:user:auth', function (ev, data) {
-    $scope.user = data.user;
-  });
-
   $scope.$on('socket:event:weiner:check', function (ev, data) {
 
     $scope.newWeiners = _.filter($scope.weiners, function(weiner) {
