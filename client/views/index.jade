@@ -18,6 +18,7 @@ html(lang="en", ng-app='nakkikone')
             span.block.user-name-username {{user.username}}
         span.menu-icon.col-10(ng-click='menuToggled = !menuToggled' ng-class="{'toggle-menu': menuToggled}" off-click='menuToggled = false')
           i.fa.fa-caret-down
+        span.weiner-indicator(ng-if='newWeiners > 0') {{newWeiners}}
       .menu.col-20(ng-class="{'toggle-menu': menuToggled}")
         a.block(href='#/weiner/my/profile' ng-click='menuToggled = false')
           i.fa.fa-user

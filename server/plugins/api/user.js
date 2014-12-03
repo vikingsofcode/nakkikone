@@ -12,11 +12,18 @@ exports.register = function (plugin, options, next) {
         path: options.basePath + '/users',
         handler: function (request, reply) {
             var User = request.server.plugins.models.User;
-            
+            var io = request.server.plugins.hapio.io;
+
             User.Model.find(function (err, results) {
                 if (err) {
                     return reply(err);
                 }
+                io.emit('event:user:get', {users: results});
+
+                io.on('event:weiner:create', function(socket) {
+                  socket.emit('event:weiner:get', {weiners: results});
+                });
+
                 reply(results);
             });
         }

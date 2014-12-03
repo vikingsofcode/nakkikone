@@ -17,7 +17,7 @@ exports.register = function (plugin, options, next) {
               var sid = account.profile.id.toString();
               var auth = account.profile.raw;
               var User = request.server.plugins.models.User;
-
+              var io = request.server.plugins.hapio.io;
               User.findByUserId(sid, function (err, user) {
                 if (err) {
                   return reply(err);
@@ -28,6 +28,8 @@ exports.register = function (plugin, options, next) {
                     if (err) {
                       return reply(err);
                     }
+                    io.emit('event:user:create', {created: created});
+
                     return reply(created);
                   });
                 } else {

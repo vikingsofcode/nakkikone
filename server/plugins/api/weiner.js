@@ -22,6 +22,15 @@ exports.register = function (plugin, options, next) {
                 io.on('event:weiner:save', function(socket) {
                   socket.emit('event:weiner:get', {weiners: results});
                 });
+
+                io.on('event:weiner:done', function(socket) {
+                  socket.emit('event:weiner:get', {weiners: results});
+                });
+
+                io.on('event:weiner:check', function(socket) {
+                  socket.emit('event:weiner:get', {weiners: results});
+                });
+
                 reply(results);
             });
         }
@@ -78,7 +87,7 @@ exports.register = function (plugin, options, next) {
               _id: request.payload[0]._id,
               userid: request.payload[0].userid,
               avatar: request.payload[0].avatar,
-              userChecked: request.payload[0].userChecked
+              userChecked: true
             }]
           };
 
