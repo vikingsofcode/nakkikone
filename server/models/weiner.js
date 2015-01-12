@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 
 var Weiner = function () {
 };
-
+// Weiner schema for mongo db
 Weiner.Schema = mongoose.Schema({
     weinerFrom: {
         userid: { type: String, index: true},
@@ -21,6 +21,7 @@ Weiner.Schema = mongoose.Schema({
     status: String
 });
 
+// Validate weiner schema - check that all values are whats expected
 Weiner.Schema.method.validate = function(obj) {
   var schema = {
     weinerFrom: Joi.object().required().keys({
@@ -42,6 +43,7 @@ Weiner.Schema.method.validate = function(obj) {
 Weiner.Model = mongoose.model('weiners', Weiner.Schema);
 Weiner.ensureIndexes = Weiner.Model.ensureIndexes();
 
+// Create and save weiner to database.
 Weiner.create = function (weiner, callback) {
 
     var self = this;
@@ -69,6 +71,7 @@ Weiner.create = function (weiner, callback) {
     });
 };
 
+// Get weiner by id.
 Weiner.findByWeinerId = function (Weinerid, callback) {
     var query = { WeinerId: Weinerid };
     Weiner.Model.findOne(query, callback);
