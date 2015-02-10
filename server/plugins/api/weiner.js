@@ -2,7 +2,7 @@ var Joi = require('joi');
 var Hoek = require('hoek');
 var authPlugin = require('../auth');
 
-
+// Routes for weiner
 exports.register = function (plugin, options, next) {
 
     options = Hoek.applyToDefaults({ basePath: '' }, options);
@@ -17,7 +17,7 @@ exports.register = function (plugin, options, next) {
                 if (err) {
                     return reply(err);
                 }
-
+                // Emit results to listers
                 io.emit('event:weiner:get', {weiners: results});
                 io.on('event:weiner:save', function(socket) {
                   socket.emit('event:weiner:get', {weiners: results});

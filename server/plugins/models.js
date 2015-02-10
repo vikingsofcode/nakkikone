@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 
+// Register mongoose connection to apps local database.
 exports.register = function (plugin, options, next) {
 
     var models = {

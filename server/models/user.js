@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 var User = function () {
 };
 
+// User schema for mongo db
 User.Schema = mongoose.Schema({
     userId: { type: Number, unique: true, index: true},
     username: { type: String, unique: true },
@@ -15,6 +16,7 @@ User.Schema = mongoose.Schema({
     created: Date
 });
 
+// Validator for user schema - checks that all values are whats expected
 User.Schema.method.validate = function(obj) {
   var schema = {
     userId: Joi.number(),
@@ -30,6 +32,7 @@ User.Schema.method.validate = function(obj) {
 User.Model = mongoose.model('users', User.Schema);
 User.ensureIndexes = User.Model.ensureIndexes();
 
+// Create new user in database from (github)auth values
 User.create = function (auth, callback) {
 
     var self = this;
@@ -58,12 +61,14 @@ User.create = function (auth, callback) {
     });
 };
 
+// Find user by username
 User.findByUsername = function (username, callback) {
 
     var query = { username: username };
     User.Model.findOne(query, callback);
 };
 
+// Find user by id
 User.findByUserId = function (userid, callback) {
     var query = { userId: userid };
     User.Model.findOne(query, callback);

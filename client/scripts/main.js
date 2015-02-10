@@ -7,11 +7,12 @@ require('angular-socket-io');
 var _ = require('lodash');
 var views = 'views/';
 
+// Define modules
 angular.module('nakkikone', ['ngRoute', 'ngResource', 'weiner', 'offClick', 'btford.socket-io']);
 
 var app = angular.module('weiner', []);
 
-
+// Assign controllers
 app.config(['$routeProvider', '$locationProvider', '$httpProvider', function($routeProvider, $locationProvider, $httpProvider) {
   $routeProvider
     .when('/', {
@@ -30,8 +31,9 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider', function($ro
   // $locationProvider.html5Mode(true);
 }]);
 
-
+// Start the application
 app.run(['$rootScope', '$location', function($rootScope, $location) {
+  // Add route listener
   $rootScope.$on('$routeChangeSuccess', function() {
     $rootScope.showHeader = false; 
     if($location.path() === '/weiner' || $location.path() === '/weiner/my/profile') {
@@ -40,7 +42,7 @@ app.run(['$rootScope', '$location', function($rootScope, $location) {
   });
 }]);
 
-
+// Construct services
 app.factory('loginService', ['$resource', function ($resource) {
   var api = $resource(null, {id: '@id'}, {
     checkAuth: {
@@ -62,6 +64,7 @@ app.factory('userService', ['$resource', function ($resource) {
   return api;
 }]);
 
+// Construct service for fetching,saving and updating weiners.
 app.factory('weinerService', ['$resource', function ($resource) {
   var api = $resource(null, {id: '@id'}, {
     getWeiners: {
@@ -85,11 +88,12 @@ app.factory('weinerService', ['$resource', function ($resource) {
   return api;
 }]);
 
-
+// Frontcontroller
 app.controller('frontController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', 'loginService', function($scope, $resource, $http, $routeParams, $route, $q, $location, loginService) {
   $scope.check = "It works, it works!";
+  // Check user authentication
   $scope.getAuthPromise = loginService.checkAuth().$promise;
-
+  // Authentication callback
   $scope.getAuthPromise.then(function(result) {
     if(result.userId) {
       $scope.auth = result;
@@ -102,6 +106,7 @@ app.controller('frontController', ['$scope', '$resource', '$http', '$routeParams
 
 }]);
 
+// Construct service for forwarding socket events to angular.
 app.factory('mySocket',['socketFactory', function (socketFactory) {
   var mySocket = socketFactory();
   mySocket.forward('event:connect');
@@ -115,7 +120,9 @@ app.factory('mySocket',['socketFactory', function (socketFactory) {
   return mySocket;
 }]);
 
+// Weiner controller
 app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', 'loginService', 'userService', 'weinerService', 'mySocket', '$rootScope', function($scope, $resource, $http, $routeParams, $route, $q, $location, loginService, userService, weinerService, mySocket, $rootScope) {
+
   $scope.getAuthPromise = loginService.checkAuth().$promise;
   $scope.getUsersPromise = userService.getUsers().$promise;
   $scope.getWeinersPromise = weinerService.getWeiners().$promise;
@@ -124,7 +131,10 @@ app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParam
     if(!result.userId) {
       $location.path('/');
     }
+
     $rootScope.user = result;
+    // Init weiner values with user id and name.
+
     $scope.nakki = {
       weinerFrom: {
         userid:    $rootScope.user._id,
@@ -136,40 +146,50 @@ app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParam
     };
   });
   
+  // Add users to scope from fetched result
   $scope.getUsersPromise.then(function(result) {
     $scope.users = result;
   });
 
+  // Add weiners to scope
   $scope.getWeinersPromise.then(function(result) {
     $scope.weiners = result;
   });
 
+  // Event handlers
+  // Get weiners
   $scope.$on('socket:event:weiner:get', function (ev, data) {
     $scope.weiners = data.weiners;
   });
 
+  // Save weiner
   $scope.$on('socket:event:weiner:save', function (ev, data) {
     $scope.weiners.push(data.weiner);
   });
 
+  // Get users
   $scope.$on('socket:event:user:get', function (ev, data) {
     $scope.users = data.users;
   });
 
+  // Add user to receive a weiner.
   $scope.addToWeinerList = function() {
+    // Set user values
     var doc = {
       userid: this.user._id,
       avatar: this.user.avatar,
       userChecked: false
     };
-
     this.user.addedToList = true;
+    // Add user to weiners weinerTo list.
     $scope.nakki.weinerTo.push(doc);
   }
 
+  // Saving weiner
   $scope.addWeiner = function(nakki) {
     weinerService.saveWeiner(nakki);
-    $scope.nakki = {weinerFrom: { userid: $rootScope.user._id, username: $rootScope.user.username}, content: '', weinerTo: [], status: 'IN PROGRESS'};
+    // Weiner values from scope
+     $scope.nakki = {weinerFrom: { userid: $rootScope.user._id, username: $rootScope.user.username}, content: '', weinerTo: [], status: 'IN PROGRESS'};
     _.each($scope.users, function(user) {
       user.addedToList = false;
     });
@@ -183,9 +203,12 @@ app.controller('weinerController', ['$scope', '$resource', '$http', '$routeParam
 
 }]);
 
+
+// Profile controller
 app.controller('profileController', ['$scope', '$resource', '$http', '$routeParams', '$route', '$q', '$location', 'loginService', 'weinerService', 'mySocket', '$rootScope', function($scope, $resource, $http, $routeParams, $route, $q, $location, loginService, weinerService, mySocket, $rootScope) {
   $scope.getAuthPromise = loginService.checkAuth().$promise;
   $scope.getWeinersPromise = weinerService.getWeiners().$promise;
+  // Get user and all weiners
   $q.all([$scope.getAuthPromise, $scope.getWeinersPromise]).then(function(data) {
     $rootScope.user = data[0];
     $scope.weiners = data[1];
@@ -195,9 +218,11 @@ app.controller('profileController', ['$scope', '$resource', '$http', '$routePara
       $location.path('/');
     }
 
-    $scope.sentWeiners = _.filter($scope.weiners, {'weinerFrom': {'userid': $rootScope.user._id }});
+    // Filter own weiners from all the weiners by checking if they were sent by the user.
+     $scope.sentWeiners = _.filter($scope.weiners, {'weinerFrom': {'userid': $rootScope.user._id }});
     $scope.numSent = $scope.sentWeiners.length;
 
+    // Filter received weiners from all the weiners by checking if user was listed in weiners weinerTo.
     $scope.receivedWeiners = _.filter($scope.weiners, function(weiner) {
       return _.any(weiner.weinerTo, {'userid': $rootScope.user._id});
     });
@@ -206,7 +231,14 @@ app.controller('profileController', ['$scope', '$resource', '$http', '$routePara
 
   });
 
+    // New weiners that user has not checked yet
+    $scope.newWeiners = _.filter($scope.weiners, function(weiner) {
+      return _.any(weiner.weinerTo, {'userid': $scope.user._id, 'userChecked': false});
+    }).length;
 
+  });
+
+  // Weiner get listener to update new weiners 
   $scope.$on('socket:event:weiner:get', function (ev, data) {
     $scope.weiners = data.weiners;
 
@@ -222,7 +254,7 @@ app.controller('profileController', ['$scope', '$resource', '$http', '$routePara
     $scope.numNew = $scope.newWeiners.length;
   });
 
-
+  // Weiner save listener
   $scope.$on('socket:event:weiner:save', function (ev, data) {
     $scope.weiners = weinerService.getWeiners();
 
@@ -248,6 +280,7 @@ app.controller('profileController', ['$scope', '$resource', '$http', '$routePara
     $scope.numNew = $scope.newWeiners.length;
   });
 
+  // Set weiner as checked
  $scope.setChecked = function() {
     var clickedWeiner = _.filter($scope.weiners, {'_id': this.weiner._id});
     var setCheckedOnClicked = _.filter(clickedWeiner[0].weinerTo, {'userid': $rootScope.user._id});
@@ -256,6 +289,7 @@ app.controller('profileController', ['$scope', '$resource', '$http', '$routePara
 
   };
 
+  // Set weiner done
   $scope.setDone = function() {
     this.weiner.status = 'DONE';
     weinerService.completeWeiner({id: this.weiner._id}, this.weiner);

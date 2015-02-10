@@ -1,6 +1,7 @@
 var Joi = require('joi');
 var Hoek = require('hoek');
 
+// Routes for login
 exports.register = function (plugin, options, next) {
 
     options = Hoek.applyToDefaults({ basePath: '' }, options);

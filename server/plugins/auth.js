@@ -1,5 +1,6 @@
 var bell = require('bell');
 
+// register github authentication for this app
 exports.register = function (plugin, options, next) {
 
   plugin.auth.strategy('github', 'bell', {

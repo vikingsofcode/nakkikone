@@ -2,7 +2,7 @@ var Joi = require('joi');
 var Hoek = require('hoek');
 var authPlugin = require('../auth');
 
-
+// Routes for user
 exports.register = function (plugin, options, next) {
 
     options = Hoek.applyToDefaults({ basePath: '' }, options);
