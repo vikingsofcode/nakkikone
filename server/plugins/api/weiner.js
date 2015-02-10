@@ -56,7 +56,7 @@ exports.register = function (plugin, options, next) {
 
     plugin.route({
         method: 'PUT',
-        path: options.basePath + '/weiners/{id}/checked',
+        path: options.basePath + '/weiners/{id}/done',
         handler: function (request, reply) {
           var id = request.payload._id;
           var Weiner = request.server.plugins.models.Weiner;

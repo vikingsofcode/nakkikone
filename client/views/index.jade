@@ -7,8 +7,13 @@ html(lang="en", ng-app='nakkikone')
     title Nakkikone
     link(rel='stylesheet' href='public/css/font-awesome.min.css' media='screen')
     link(rel='stylesheet' href='public/css/styles.css' media='screen')
+    script(type='text/javascript' src="https://cdn.socket.io/socket.io-1.2.1.js")
+    script(type='text/javascript' src='public/js/bundle.js')
   body
     header.header(ng-controller='profileController' ng-if='showHeader' ng-show='user.$resolved && user.userId')
+      .home-button
+        a(href='#/weiner')
+          span Etusivu
       .header-user
         span.user-image.col-10
           img(ng-src='{{user.avatar}}')
@@ -18,7 +23,8 @@ html(lang="en", ng-app='nakkikone')
             span.block.user-name-username {{user.username}}
         span.menu-icon.col-10(ng-click='menuToggled = !menuToggled' ng-class="{'toggle-menu': menuToggled}" off-click='menuToggled = false')
           i.fa.fa-caret-down
-        span.weiner-indicator(ng-if='newWeiners > 0') {{newWeiners}}
+        .weiner-indicator(ng-if='numNew > 0')
+          span {{numNew}}
       .menu.col-20(ng-class="{'toggle-menu': menuToggled}")
         a.block(href='#/weiner/my/profile' ng-click='menuToggled = false')
           i.fa.fa-user
@@ -29,5 +35,4 @@ html(lang="en", ng-app='nakkikone')
         
     .container(ng-view )
 
-    script(type='text/javascript' src="https://cdn.socket.io/socket.io-1.2.1.js")
-    script(type='text/javascript' src='public/js/bundle.js')
+    

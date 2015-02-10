@@ -19,7 +19,6 @@ h2
 
 *
   box-sizing border-box
-  user-select none
 
 a
   text-decoration none
@@ -113,12 +112,17 @@ input[type="text"]
   width 100%
   height 100%
   position relative
+
+.padding-top-55
   padding-top 55px
 
 .page-container
   position relative
   width 100%
   height 100%
+  padding-top 75px
+  background #527689
+  top 0
   &.show-page-2
     .page-1
       left -100%
@@ -160,6 +164,7 @@ input[type="text"]
     height 100%
     position absolute
     right 0
+    min-width 250px
     display inline-block
     z-index 100
     .user-image
@@ -195,7 +200,7 @@ input[type="text"]
 
 .login
   background #fff
-  margin 75px auto 0
+  margin 0 auto
   width 350px
   display block
   text-align center
@@ -240,6 +245,7 @@ input[type="text"]
   background #fff
   width 100%
   height 100%
+  position relative
 
 .weiner-text
   font-style italic
@@ -247,10 +253,12 @@ input[type="text"]
 
 .weiner-center
   background #fff
+  width 100%
 
 .weiner-left
 .weiner-right
-  display inline-block
+  display block
+  width 100% 
   height 100%
   background #f7f7f7
   overflow-y auto
@@ -355,6 +363,8 @@ input[type="text"]
   position absolute
   z-index 99
   right 0
+  width 20%
+  min-width 250px
   transition all 300ms ease-in-out
   top -180px
   &.toggle-menu
@@ -381,3 +391,71 @@ input[type="text"]
   z-index 2000
   top 50%
   transform translateY(-50%)
+  span
+    position relative
+    top 20%
+    transform translateY(-20%)
+
+.status
+  width 10px
+  height 10px
+  border-radius 100%
+  position absolute
+  right 10px
+  top 10px
+  &.green
+    background green
+  &.gray
+    background gray
+
+.content
+  padding 15px
+
+.weiner-count
+  font-weight 600
+  font-size 1.5em
+
+
+
+.content
+  .user-weiners
+    border-bottom 1px solid #ccc
+    margin-bottom 25px
+    background #fff
+    padding 25px
+  .user-weiners-list
+    padding 5px
+    .weiner
+      padding 10px
+      margin-bottom 5px
+
+.home-button
+  position absolute
+  left 25px
+  top 0
+  height 100%
+  a
+    height 100%
+    color #fff
+    position relative
+    display block
+    span
+      position relative
+      top 30%
+      transform translateY(-30%)
+
+.profile-weiner
+  cursor pointer
+
+@media screen and (min-width: 1024px)
+  .weiner-center
+    width 60%
+
+  .weiner-left
+  .weiner-right
+    width 20%
+    display inline-block
+    height 100%
+    background #f7f7f7
+    overflow-y auto
+    overflow-x hidden

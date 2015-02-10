@@ -1,4 +1,4 @@
-.weiner
+.weiner.padding-top-55
   .weiner-left.col-20
     .user-list
       .list-item(ng-repeat='user in users | filter:{username: searchUser}' ng-class='{added: user.addedToList}' ng-click='addToWeinerList()' ng-class-odd='"odd"' ng-class-even='"even"')
@@ -23,7 +23,7 @@
   .weiner-right.col-20
     .user-weiners
       .weiner(ng-repeat='weiner in weiners | orderBy:"-created"')
-        span.status {{weiner.status}}
+        span.status(ng-class='{"green": weiner.status === "DONE", "gray": weiner.status === "IN PROGRESS"}')
         span.who-weiner {{weiner.weinerFrom.username}} nakitti:
         span.block.weiner-text {{weiner.content}} 
         span.user-image.inline-block(ng-repeat='user in weiner.weinerTo')
