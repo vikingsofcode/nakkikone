@@ -33,6 +33,7 @@ const manifest = {
       },
       path: path.join(__dirname, 'views')
     },
+    'hapio': {},
     './plugins/web/index': [{ select: ['web'] }]
   }
 };
@@ -43,6 +44,11 @@ Glue.compose(manifest, composeOptions, function (err, server) {
   }
 
   server.start(() => {
+    let io = server.plugins.hapio.io;
+    io.on('connection', (socket) => {
+      socket.emit('event:connect', {msg: 'lulz'});
+      console.log(socket.id + ' connected');
+    });
     console.log('Server started');
   });
 });
