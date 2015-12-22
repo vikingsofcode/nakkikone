@@ -33,6 +33,15 @@ const manifest = {
       },
       path: path.join(__dirname, 'views')
     },
+    'hapi-mongo-models': {
+      mongodb: {
+        url: 'mongodb://localhost:27017/weiner-machine'
+      },
+      models: {
+        Weiner: './server/models/weiner'
+      },
+      autoIndex: true
+    },
     'hapio': {},
     './plugins/web/index': [{ select: ['web'] }]
   }

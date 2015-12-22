@@ -4,13 +4,12 @@ import React from 'react';
 export default class Default extends React.Component {
 
   render() {
-
     return (
       <html>
       <head>
         <meta charSet="utf-8"></meta>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
-        <title>Youtify</title>
+        <title>Weiner Machine</title>
       </head>
       <body>
         <div id="app"></div>
@@ -19,4 +18,4 @@ export default class Default extends React.Component {
       </html>
     );
   }
-};
+}
