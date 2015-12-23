@@ -16,12 +16,12 @@ Weiner.schema = Joi.object().keys({
     weinerFrom: Joi.object().keys({
         userid: Joi.string().required(),
         username: Joi.string().required()
-    }),
+    }).required(),
     weinerTo: Joi.array().items(Joi.object().keys({
       userid: Joi.string().required(),
       avatar: Joi.string().required(),
       userChecked: Joi.boolean().required()
-    })),
+    })).required(),
     content: Joi.string(),
     created: Joi.date(),
     status: Joi.string()
@@ -33,14 +33,14 @@ Weiner.indexes = [
 ];
 
 // Create and save weiner to database.
-Weiner.create = (weiner, callback) => {
+Weiner.create = function(weiner, callback) {
 
     const self = this;
 
     async.auto({
         newWeiner: (done) => {
 
-            const document = {
+            const doc = {
                 weinerFrom: weiner.weinerFrom,
                 weinerTo: weiner.weinerTo,
                 content: weiner.content,
@@ -48,7 +48,7 @@ Weiner.create = (weiner, callback) => {
                 status: weiner.status
             };
 
-            self.insertOne(document, done);
+            self.insertOne(doc, done);
         }
     }, (err, results) => {
 
@@ -61,7 +61,7 @@ Weiner.create = (weiner, callback) => {
 };
 
 // Get weiner by id.
-Weiner.findByWeinerId = (weinerId, callback) => {
+Weiner.findByWeinerId = function(weinerId, callback) {
     const query = { _id: weinerId };
     this.findOne(query, callback);
 };
