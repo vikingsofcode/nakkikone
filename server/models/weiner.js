@@ -32,5 +32,38 @@ Weiner.indexes = [
     { key: { 'weinerTo.userid': 1, unique: true } }
 ];
 
+// Create and save weiner to database.
+Weiner.create = (weiner, callback) => {
+
+    const self = this;
+
+    async.auto({
+        newWeiner: (done) => {
+
+            const document = {
+                weinerFrom: weiner.weinerFrom,
+                weinerTo: weiner.weinerTo,
+                content: weiner.content,
+                created: new Date(),
+                status: weiner.status
+            };
+
+            self.insertOne(document, done);
+        }
+    }, (err, results) => {
+
+        if (err) {
+          return callback(err);
+        }
+
+        callback(null, results.newWeiner[0]);
+    });
+};
+
+// Get weiner by id.
+Weiner.findByWeinerId = (weinerId, callback) => {
+    const query = { _id: weinerId };
+    this.findOne(query, callback);
+};
 
 module.exports = Weiner;
