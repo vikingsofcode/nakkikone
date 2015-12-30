@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
 
 export default class App extends React.Component {
   render() {
@@ -13,3 +16,24 @@ export default class App extends React.Component {
     )
   }
 }
+
+App.displayName = 'App';
+App.propTypes = {
+  weiners: PropTypes.array
+};
+
+function mapStateToProps(state) {
+  return {
+    weiners: state.weiner.weiners
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
