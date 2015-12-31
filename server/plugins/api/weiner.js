@@ -9,6 +9,15 @@ internals.applyRoutes = function (server, next) {
     const Weiner = server.plugins['hapi-mongo-models'].Weiner;
     const io = server.plugins.hapio.io;
 
+    let findWeiners = () => {
+      Weiner.find((err, results) => {
+        if (err) {
+          return io.emit('weiner:error', err);
+        }
+        return io.emit('weiner:list', { weiners: results });
+      });
+    }
+
     io.on('connection', (socket) => {
 
       socket.on('weiner:create', (data) => {
@@ -21,18 +30,13 @@ internals.applyRoutes = function (server, next) {
             if (err) {
               return io.emit('weiner:error', err);
             }
-            return io.emit('weiner:get', { weiner: weiner });
+            findWeiners();
           });
         });
       });
 
       socket.on('weiner:get', () => {
-        Weiner.find((err, results) => {
-          if (err) {
-            return io.emit('weiner:error', err);
-          }
-          return io.emit('weiner:list', { weiners: results });
-        });
+        findWeiners();
       });
 
       socket.on('weiner:set:done', (data) => {
