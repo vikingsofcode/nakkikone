@@ -6,6 +6,7 @@ const internals = {};
 
 internals.applyRoutes = function (server, next) {
 
+    const User = server.plugins['hapi-mongo-models'].User;
     const io = server.plugins.hapio.io;
 
     server.route({
@@ -15,13 +16,31 @@ internals.applyRoutes = function (server, next) {
           auth: 'github',
           pre: [{
             assign: 'user',
-            method: function (request, reply) {
-              console.log(request.auth);
-              return reply(request.auth);
+            method: (request, reply) => {
+              let account = request.auth.credentials;
+              let sid = account.profile.id;
+              let auth = account.profile.raw;
+
+              User.findByUserId(sid, (err, user) => {
+                if (err) {
+                  return reply('Error finding user:', err);
+                }
+
+                if (user === null) {
+                  User.create(auth, (err, created) => {
+                    if (err) {
+                      return reply('Error creating a new user:', err);
+                    }
+
+                    return io.emit('user:created', { newUser: created }), reply(created);
+                  })
+                } else {
+                  return reply(user);
+                }
+              });
             }
           }],
-          handler: function(request, reply) {
-            console.log(request.pre.user);
+          handler: (request, reply) => {
             request.session.set('weiner-auth', request.pre.user);
 
             return reply(request.session.get('weiner-auth')).redirect('/weiner');
@@ -32,8 +51,12 @@ internals.applyRoutes = function (server, next) {
     server.route({
       method: 'GET',
       path: '/weiner',
-      handler: function(request, reply) {
-        console.log("made to weiners");
+      handler: (request, reply) => {
+        if (!request.session.get('weiner-auth') && !request.auth.isAuthenticated) {
+          console.log("no auth");
+        } else {
+          console.log("authed");
+        }
       }
     })
 
@@ -44,7 +67,7 @@ internals.applyRoutes = function (server, next) {
 
 exports.register = function (server, options, next) {
 
-    server.dependency(['yar'], internals.applyRoutes);
+    server.dependency(['yar', 'hapi-mongo-models'], internals.applyRoutes);
 
     next();
 };

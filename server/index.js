@@ -38,7 +38,8 @@ const manifest = {
         url: 'mongodb://localhost:27017/weiner-machine'
       },
       models: {
-        Weiner: './server/models/weiner'
+        Weiner: './server/models/weiner',
+        User: './server/models/user'
       },
       autoIndex: true
     },
