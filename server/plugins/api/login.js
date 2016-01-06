@@ -56,9 +56,7 @@ internals.applyRoutes = function (server, next) {
           return reply({authError: true}).redirect('/');
         }
 
-
-
-        io.emit('user:online', { user: request.session.get('weiner-auth') });
+        return reply(request.session.get('weiner-auth')), io.emit('user:online', { user: request.session.get('weiner-auth') });
 
       }
     });
