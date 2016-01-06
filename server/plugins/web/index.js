@@ -1,4 +1,4 @@
-var path       = require('path'),
+let path       = require('path'),
     publicPath = path.join(__dirname, '../../../build/'),
     imgPath    = path.join(__dirname, '../../../client/media'),
     baseUrl    = '/';

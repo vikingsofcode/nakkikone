@@ -43,7 +43,21 @@ const manifest = {
       autoIndex: true
     },
     'hapio': {},
+    'hapi-auth-cookie': {},
+    'bell': {},
+    'yar': {
+      name: 'weiner-session',
+      cache: {
+        expiresIn: 24 * 60 * 60 * 1000
+      },
+      cookieOptions: {
+        password: 'weiner-auth',
+        isSecure: false
+      }
+    },
+    './plugins/auth': {},
     './plugins/api/weiner': [{ select: ['web'] }],
+    './plugins/api/login': [{ select: ['web'] }],
     './plugins/web/index': [{ select: ['web'] }]
   }
 };
