@@ -46,19 +46,49 @@ internals.applyRoutes = function (server, next) {
             return reply(request.session.get('weiner-auth')).redirect('/weiner');
           }
         }
-    })
+    });
 
     server.route({
       method: 'GET',
       path: '/weiner',
       handler: (request, reply) => {
         if (!request.session.get('weiner-auth') && !request.auth.isAuthenticated) {
-          console.log("no auth");
-        } else {
-          console.log("authed");
+          return reply({authError: true}).redirect('/');
         }
+
+
+
+        io.emit('user:online', { user: request.session.get('weiner-auth') });
+
       }
-    })
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/logout',
+      handler: (request, reply) => {
+        request.session.reset();
+
+        const update = {
+          online: false
+        };
+
+        const loggedUser = User.findByUserId(request.session.get('weiner-auth').userId, (err, user) => {
+          if (err) {
+            return err;
+          }
+          return user;
+        })
+
+        User.findByIdAndUpdate(loggedUser._id, update, (err, user) => {
+          if (err) {
+            return io.emit('user:error', err);
+          }
+          return io.emit('user:offline', { userOffline: user });
+        });
+        return reply.redirect('/');
+      }
+    });
 
 
     next();

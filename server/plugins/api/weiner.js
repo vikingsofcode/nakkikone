@@ -62,7 +62,7 @@ internals.applyRoutes = function (server, next) {
           }]
         };
 
-        Weiner.findByIdAndUpdate({_id: data._id, weinerTo: { userid: data.userid}}, update, function (err, weiner) {
+        Weiner.findByIdAndUpdate({_id: data._id, weinerTo: { userid: data.userid}}, update, (err, weiner) => {
           if (err) {
             return io.emit('weiner:error', err);
           }
