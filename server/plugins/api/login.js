@@ -8,7 +8,7 @@ const config = require('../../../config');
 internals.applyRoutes = function (server, next) {
 
     const User = server.plugins['hapi-mongo-models'].User;
-    const io = server.plugins.hapio.io;
+    const io = server.plugins['hapi-io'].io;
 
     server.route({
       method: ['GET', 'POST'],
@@ -52,6 +52,11 @@ internals.applyRoutes = function (server, next) {
     server.route({
       method: 'POST',
       path: '/logout',
+      config: {
+        plugins: {
+          'hapi-io': 'disconnect'
+        }
+      },
       handler: (request, reply) => {
         const loggedUser = request.yar.get(config.session.name)._id;
 
@@ -70,8 +75,6 @@ internals.applyRoutes = function (server, next) {
         return reply.redirect('/');
       }
     });
-
-    io
 
 
     next();

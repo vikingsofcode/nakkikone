@@ -8,7 +8,8 @@ const config = require('../../../config');
 internals.applyRoutes = function (server, next) {
 
     const Weiner = server.plugins['hapi-mongo-models'].Weiner;
-    const io = server.plugins.hapio.io;
+    const User = server.plugins['hapi-mongo-models'].User;
+    const io = server.plugins['hapi-io'].io;
 
     let findWeiners = () => {
       Weiner.find((err, results) => {
@@ -78,11 +79,29 @@ internals.applyRoutes = function (server, next) {
     server.route({
         method: 'GET',
         path: '/weiner',
+        config: {
+          plugins: {
+            'hapi-io': 'connection'
+          }
+        },
         handler: (request, reply) => {
 
           if (!request.yar.get(config.session.name)) {
             return reply({ authError: true }).redirect('/'), io.emit('user:error', { authError: true });
           }
+
+          const loggedUser = request.yar.get(config.session.name)._id;
+
+          const update = {
+            online: true
+          };
+
+          User.findByIdAndUpdate(loggedUser, { $set: update }, (err, user) => {
+            if (err) {
+              return io.emit('user:error', err);
+            }
+            return io.emit('user:online', { userOffline: user });
+          });
 
           return reply.view('App');
         }

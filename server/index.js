@@ -48,7 +48,7 @@ const manifest = {
       },
       autoIndex: true
     },
-    'hapio': {},
+    'hapi-io': {},
     'hapi-auth-cookie': {},
     'bell': {},
     'yar': {

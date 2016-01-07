@@ -8,7 +8,7 @@ const config = require('../../../config');
 internals.applyRoutes = function (server, next) {
 
     const User = server.plugins['hapi-mongo-models'].User;
-    const io = server.plugins.hapio.io;
+    const io = server.plugins['hapi-io'].io;
 
     let findUsers = () => {
       User.find((err, results) => {
