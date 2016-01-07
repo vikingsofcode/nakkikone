@@ -3,12 +3,13 @@
 const Joi = require('joi');
 
 const internals = {};
+const config = require('../../../config');
 
 internals.applyRoutes = function (server, next) {
 
     const User = server.plugins['hapi-mongo-models'].User;
     const io = server.plugins.hapio.io;
-    
+
     server.route({
       method: ['GET', 'POST'],
         path: '/login',
@@ -41,9 +42,9 @@ internals.applyRoutes = function (server, next) {
             }
           }],
           handler: (request, reply) => {
-            request.session.set('weiner-auth', request.pre.user);
+            request.yar.set(config.session.name, request.pre.user);
 
-            return reply(request.session.get('weiner-auth')).redirect('/weiner');
+            return reply(request.yar.get(config.session.name)).redirect('/weiner');
           }
         }
     });
@@ -52,7 +53,7 @@ internals.applyRoutes = function (server, next) {
       method: 'POST',
       path: '/logout',
       handler: (request, reply) => {
-        const loggedUser = request.session.get('weiner-auth')
+        const loggedUser = request.yar.get(config.session.name)
 
         const update = {
           online: false
@@ -65,7 +66,7 @@ internals.applyRoutes = function (server, next) {
           return io.emit('user:offline', { userOffline: user });
         });
 
-        request.session.reset();
+        request.yar.reset();
         return reply.redirect('/');
       }
     });

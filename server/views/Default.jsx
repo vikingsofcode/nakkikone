@@ -13,7 +13,7 @@ export default class Default extends React.Component {
       </head>
       <body>
         <div id="app"></div>
-        <script src="public/bundle.js"></script>
+        <script src="/public/bundle.js"></script>
       </body>
       </html>
     );

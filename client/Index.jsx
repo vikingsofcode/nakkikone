@@ -4,6 +4,7 @@ import { Router, IndexRoute, Route } from 'react-router';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
 import App from 'components/App';
 import Login from 'components/Login';
+import Profile from 'components/Profile';
 import { bindActionCreators } from 'redux';
 import io from 'socket.io-client';
 import * as WeinerActions from './actions/weiners';
@@ -43,6 +44,7 @@ render(
       <Route path="/">
       <IndexRoute component={Login} />
       <Route path="weiner" component={App} />
+      <Route path="weiner/profile" component={Profile} />
       </Route>
     </Router>
   </Provider>,

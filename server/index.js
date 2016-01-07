@@ -2,6 +2,8 @@ import Hapi from 'hapi';
 import Glue from 'glue';
 import path from 'path';
 
+const config = require('../config');
+
 const composeOptions = {
   relativeTo: __dirname
 };
@@ -14,12 +16,15 @@ const manifest = {
     connections: {
       routes: {
         security: true
+      },
+      router: {
+        stripTrailingSlash: true
       }
     }
   },
   connections: [
     {
-      port: 6678,
+      port: config.server.port,
       labels: ['web']
     }
   ],
@@ -35,7 +40,7 @@ const manifest = {
     },
     'hapi-mongo-models': {
       mongodb: {
-        url: 'mongodb://localhost:27017/weiner-machine'
+        url: config.mongodb.url
       },
       models: {
         Weiner: './server/models/weiner',
@@ -47,12 +52,12 @@ const manifest = {
     'hapi-auth-cookie': {},
     'bell': {},
     'yar': {
-      name: 'weiner-session',
+      name: config.session.name,
       cache: {
         expiresIn: 24 * 60 * 60 * 1000
       },
       cookieOptions: {
-        password: 'weiner-auth',
+        password: config.session.cookiepwd,
         isSecure: false
       }
     },

@@ -1,7 +1,7 @@
 // Default layout template
 import React from 'react';
 
-export default class App extends React.Component {
+export default class Profile extends React.Component {
 
   render() {
     return (
@@ -9,7 +9,7 @@ export default class App extends React.Component {
       <head>
         <meta charSet="utf-8"></meta>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
-        <title>Weiner Machine - App</title>
+        <title>Weiner Machine - App - Profile</title>
       </head>
       <body>
         <div id="app"></div>

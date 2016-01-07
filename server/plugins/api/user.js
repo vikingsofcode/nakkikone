@@ -24,6 +24,14 @@ internals.applyRoutes = function (server, next) {
       });
     });
 
+    server.route({
+      method: 'GET',
+      path: '/weiner/profile',
+      handler: (request, reply) => {
+        return reply.view('Profile');
+      }
+    });
+
     next();
 };
 

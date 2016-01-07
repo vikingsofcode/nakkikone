@@ -4,8 +4,7 @@ let path       = require('path'),
     imgPath    = path.join(__dirname, '../../../client/media'),
     baseUrl    = '/';
 
-const auth = require('../auth');
-
+const config = require('../../../config');
 
 exports.register = function (server, options, next) {
 
@@ -14,7 +13,7 @@ exports.register = function (server, options, next) {
       path: '/',
       handler: function(request, reply) {
 
-        if (request.session.get('weiner-auth')) {
+        if (request.yar.get(config.session.name)) {
           return reply.redirect('/weiner');
         } else {
           return reply.view('Default');
