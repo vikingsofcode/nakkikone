@@ -53,13 +53,13 @@ internals.applyRoutes = function (server, next) {
       method: 'POST',
       path: '/logout',
       handler: (request, reply) => {
-        const loggedUser = request.yar.get(config.session.name)
+        const loggedUser = request.yar.get(config.session.name)._id;
 
         const update = {
           online: false
         };
 
-        User.findByIdAndUpdate(loggedUser._id, update, (err, user) => {
+        User.findByIdAndUpdate(loggedUser, { $set: update }, (err, user) => {
           if (err) {
             return io.emit('user:error', err);
           }
@@ -70,6 +70,8 @@ internals.applyRoutes = function (server, next) {
         return reply.redirect('/');
       }
     });
+
+    io
 
 
     next();

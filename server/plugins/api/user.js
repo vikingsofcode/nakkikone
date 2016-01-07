@@ -3,6 +3,7 @@
 const Joi = require('joi');
 
 const internals = {};
+const config = require('../../../config');
 
 internals.applyRoutes = function (server, next) {
 
@@ -26,9 +27,36 @@ internals.applyRoutes = function (server, next) {
 
     server.route({
       method: 'GET',
+      path: '/current-user',
+      handler: (request, reply) => {
+
+        const id = request.yar.get(config.session.name).userId;
+
+        User.findByUserId(id, (err, user) => {
+          if (err) {
+            return reply(err);
+          }
+
+          if (!user) {
+            return reply({ error: 'No user found lol!!' }).code(404);
+          }
+
+          return reply(user);
+        })
+      }
+    });
+
+    server.route({
+      method: 'GET',
       path: '/weiner/profile',
       handler: (request, reply) => {
-        return reply.view('Profile');
+
+        if (request.yar.get(config.session.name)) {
+          return reply.view('Profile');
+        } else {
+          return reply.redirect('/');
+        }
+
       }
     });
 

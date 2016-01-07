@@ -35,15 +35,20 @@ socket.on('weiner:list', (data) => {
 
 socket.on('user:list', (data) => {
   let userActions = bindActionCreators(UserActions, store.dispatch);
-  userActions.setUsers(data);
+  userActions.setUsers(data.users);
 });
+
+function getUser() {
+  let userActions = bindActionCreators(UserActions, store.dispatch);
+  userActions.currentUser();
+}
 
 render(
   <Provider store={store}>
     <Router history={history}>
       <Route path="/">
       <IndexRoute component={Login} />
-      <Route path="weiner" component={App} />
+      <Route path="weiner" component={App} onEnter={getUser} />
       <Route path="weiner/profile" component={Profile} />
       </Route>
     </Router>

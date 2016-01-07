@@ -45,7 +45,7 @@ internals.applyRoutes = function (server, next) {
           status: 'DONE'
         };
 
-        Weiner.findByIdAndUpdate(data._id, update, (err, weiner) => {
+        Weiner.findByIdAndUpdate(data._id, { $set: update }, (err, weiner) => {
           if (err) {
             return io.emit('weiner:error', err);
           }
@@ -57,13 +57,13 @@ internals.applyRoutes = function (server, next) {
         const update = {
           weinerTo: [{
             _id: data._id,
-            userid: data.userid,
+            userId: data.userId,
             avatar: data.avatar,
             userChecked: true
           }]
         };
 
-        Weiner.findByIdAndUpdate({_id: data._id, weinerTo: { userid: data.userid}}, update, (err, weiner) => {
+        Weiner.findByIdAndUpdate(data._id, { $set: update }, (err, weiner) => {
           if (err) {
             return io.emit('weiner:error', err);
           }
@@ -79,11 +79,12 @@ internals.applyRoutes = function (server, next) {
         method: 'GET',
         path: '/weiner',
         handler: (request, reply) => {
-          if (!request.yar.get(config.session.name) && !request.auth.isAuthenticated) {
+
+          if (!request.yar.get(config.session.name)) {
             return reply({ authError: true }).redirect('/'), io.emit('user:error', { authError: true });
           }
 
-          return reply.view('App', { user: request.yar.get('weiner-auth'), isAuthenticated: request.auth.isAuthenticated });
+          return reply.view('App');
         }
     });
 

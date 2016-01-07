@@ -14,11 +14,12 @@ User._collection = 'Users';
 User.schema = Joi.object().keys({
   userId: Joi.number(),
   username: Joi.string().required(),
-  displayName: Joi.string(),
+  displayname: Joi.string(),
   email: Joi.string(),
   avatar: Joi.string(),
   created: Joi.date(),
-  online: Joi.boolean()
+  online: Joi.boolean(),
+  connection: Joi.string()
 });
 
 User.indexes = [
@@ -28,7 +29,7 @@ User.indexes = [
 ];
 
 // Create and save User to database.
-User.create = function(auth, callback) {
+User.create = function(auth, connection, callback) {
 
     const self = this;
 
@@ -38,11 +39,12 @@ User.create = function(auth, callback) {
             const doc = {
                 userId: auth.id,
                 username: auth.login,
-                displayName: auth.name,
+                displayname: auth.name,
                 email: auth.email,
                 avatar: auth.avatar_url,
                 created: new Date(),
-                online: true
+                online: true,
+                connection: connection
             };
 
             self.insertOne(doc, done);

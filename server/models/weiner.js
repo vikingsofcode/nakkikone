@@ -14,11 +14,11 @@ Weiner._collection = 'weiners';
 Weiner.schema = Joi.object().keys({
     _id: Joi.object(),
     weinerFrom: Joi.object().keys({
-        userid: Joi.string().required(),
+        userId: Joi.number().required(),
         username: Joi.string().required()
     }).required(),
     weinerTo: Joi.array().items(Joi.object().keys({
-      userid: Joi.string().required(),
+      userId: Joi.number().required(),
       avatar: Joi.string().required(),
       userChecked: Joi.boolean().required()
     })).required(),
@@ -28,8 +28,8 @@ Weiner.schema = Joi.object().keys({
 });
 
 Weiner.indexes = [
-    { key: { 'weinerFrom.userid': 1, unique: true } },
-    { key: { 'weinerTo.userid': 1, unique: true } }
+    { key: { 'weinerFrom.userId': 1, unique: true } },
+    { key: { 'weinerTo.userId': 1, unique: true } }
 ];
 
 // Create and save weiner to database.
