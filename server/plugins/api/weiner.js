@@ -19,7 +19,7 @@ internals.applyRoutes = function (server, next) {
     }
 
     io.on('connection', (socket) => {
-
+      
       socket.on('weiner:create', (data) => {
         Joi.validate(data, Weiner.schema, (err) => {
           if (err) {
@@ -72,6 +72,18 @@ internals.applyRoutes = function (server, next) {
 
       });
 
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/weiner',
+        handler: (request, reply) => {
+          if (!request.session.get('weiner-auth') && !request.auth.isAuthenticated) {
+            return reply({ authError: true }).redirect('/'), io.emit('user:error', { authError: true });
+          }
+
+          return reply.view('App', { user: request.session.get('weiner-auth'), isAuthenticated: request.auth.isAuthenticated });
+        }
     });
 
     next();

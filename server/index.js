@@ -59,6 +59,7 @@ const manifest = {
     './plugins/auth': {},
     './plugins/api/weiner': [{ select: ['web'] }],
     './plugins/api/login': [{ select: ['web'] }],
+    './plugins/api/user': [{ select: ['web'] }],
     './plugins/web/index': [{ select: ['web'] }]
   }
 };

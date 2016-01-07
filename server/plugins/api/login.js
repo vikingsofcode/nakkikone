@@ -8,7 +8,7 @@ internals.applyRoutes = function (server, next) {
 
     const User = server.plugins['hapi-mongo-models'].User;
     const io = server.plugins.hapio.io;
-
+    
     server.route({
       method: ['GET', 'POST'],
         path: '/login',
@@ -49,34 +49,14 @@ internals.applyRoutes = function (server, next) {
     });
 
     server.route({
-      method: 'GET',
-      path: '/weiner',
-      handler: (request, reply) => {
-        if (!request.session.get('weiner-auth') && !request.auth.isAuthenticated) {
-          return reply({authError: true}).redirect('/');
-        }
-
-        return reply(request.session.get('weiner-auth')), io.emit('user:online', { user: request.session.get('weiner-auth') });
-
-      }
-    });
-
-    server.route({
-      method: 'GET',
+      method: 'POST',
       path: '/logout',
       handler: (request, reply) => {
-        request.session.reset();
+        const loggedUser = request.session.get('weiner-auth')
 
         const update = {
           online: false
         };
-
-        const loggedUser = User.findByUserId(request.session.get('weiner-auth').userId, (err, user) => {
-          if (err) {
-            return err;
-          }
-          return user;
-        })
 
         User.findByIdAndUpdate(loggedUser._id, update, (err, user) => {
           if (err) {
@@ -84,6 +64,8 @@ internals.applyRoutes = function (server, next) {
           }
           return io.emit('user:offline', { userOffline: user });
         });
+
+        request.session.reset();
         return reply.redirect('/');
       }
     });

@@ -4,7 +4,6 @@ const internals = {};
 
 
 internals.applyStrategy = function (server, next) {
-
   server.auth.strategy('github', 'bell', {
     provider: 'github',
     password: 'weiner-auth',

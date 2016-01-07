@@ -1,21 +1,31 @@
+'use strict';
 let path       = require('path'),
     publicPath = path.join(__dirname, '../../../build/'),
     imgPath    = path.join(__dirname, '../../../client/media'),
     baseUrl    = '/';
 
-exports.register = function (plugin, options, next) {
+const auth = require('../auth');
 
-  plugin.route({
+
+exports.register = function (server, options, next) {
+
+  server.route({
       method: 'GET',
       path: '/',
-      handler: {
-        view: 'Default'
+      handler: function(request, reply) {
+
+        if (request.session.get('weiner-auth')) {
+          return reply.redirect('/weiner');
+        } else {
+          return reply.view('Default');
+        }
+
       }
 
   });
 
   // Template partials
-  plugin.route({
+  server.route({
     path: baseUrl + 'views/{name}',
     method: 'GET',
     handler: function(request, reply) {
@@ -23,7 +33,7 @@ exports.register = function (plugin, options, next) {
     }
   });
 
-  plugin.route({
+  server.route({
     method: 'GET',
     path: baseUrl + 'public/{path*}',
     handler: {
@@ -33,7 +43,7 @@ exports.register = function (plugin, options, next) {
     }
   });
 
-  plugin.route({
+  server.route({
     method: 'GET',
     path: baseUrl + 'img/{path*}',
     handler: {
