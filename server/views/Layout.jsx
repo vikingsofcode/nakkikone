@@ -11,6 +11,14 @@ export default class Layout extends React.Component {
         <title>Weiner Machine - {this.props.title}</title>
       </head>
       <body>
+        <div className="navbar">
+          <a href="/weiner" className="navbar-logo"></a>
+          <nav className="navbar-nav">
+            <a href="/weiner" >Home</a>
+            <a href="/weiner/profile">Profile</a>
+            <a href="#" >Logout</a>
+          </nav>
+        </div>
         <div id="app"></div>
         <script src="/public/bundle.js"></script>
       </body>

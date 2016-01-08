@@ -32,12 +32,12 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'build'),
     filename: 'bundle.js',
-    publicPath: '/dist/'
+    publicPath: '/build/'
   },
   plugins: plugins,
   resolve: {
     modulesDirectories: ['./client', './node_modules'],
-    extensions: ['', '.js', '.jsx', '.styl']
+    extensions: ['', '.js', '.jsx', '.styl', '.svg']
   },
   module: {
     loaders: [
@@ -63,6 +63,10 @@ module.exports = {
       {
         test: /\.styl$/,
         loaders: ['style', 'css', 'stylus']
+      },
+      {
+        test: /\.svg$/,
+        loader: 'file-loader'
       }
     ]
   }

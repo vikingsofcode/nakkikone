@@ -14,8 +14,10 @@ export default class UserBlock extends Component {
   render() {
     return (
       <div onClick={this.selectUser} className="user-block">
-          <p>id: {this.props.userData.userId}</p>
-          <p>username: {this.props.userData.username}</p>
+        <div className="user-block-image" style={{
+            backgroundImage: 'url(' + this.props.userData.avatar + ')'
+          }}></div>
+        <div className="user-block-content">{this.props.userData.username}</div>
       </div>
 
     )

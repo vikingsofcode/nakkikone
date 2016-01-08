@@ -5,6 +5,7 @@ import io from 'socket.io-client';
 let socket = io('http://localhost:6678');
 import _ from 'lodash';
 import UserBlock from './users/UserBlock';
+import './main.styl';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -65,10 +66,13 @@ export default class App extends React.Component {
       userlist.push(<UserBlock key={user.userId} userData={user} onClick={this.selectUser}/>);
     });
     return (
-      <div>
+      <div className="weiner-app">
+          <div className="user-list">
+            {userlist}
+          </div>
+          <div className="right-col">
           <p>Current user: {user.username} - new weiners: {newWeiners.length}</p>
-          <p><b>users</b></p>
-          {userlist}
+
           <input type="text" ref="weinerContent" className="weiner-input"/>
           <button onClick={this.addWeiner}>weiner plz</button>
           <p><b>weiners</b></p>
@@ -79,6 +83,7 @@ export default class App extends React.Component {
               return user.userId;
             })}</span>
       </p>
+      </div>
       </div>
 
     )
