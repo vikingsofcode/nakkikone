@@ -6,6 +6,6 @@ let initialState = [];
 
 export default handleActions({
   SET_WEINERS: (state, action) => {
-    return action.payload;
+    return Object.assign([], state, action.payload);
   }
 }, initialState);

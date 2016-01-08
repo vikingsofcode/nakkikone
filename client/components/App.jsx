@@ -54,7 +54,6 @@ export default class App extends React.Component {
 
   }
   render() {
-
     let newWeiners = _.filter(this.props.weiners, (weiner) => {
       return _.any(weiner.weinerTo, { 'userId': this.props.currentUser.userId, 'userChecked': false });
     });

@@ -1,4 +1,6 @@
 import React, { Component, PropTypes } from 'react';
+import ReactDOM from 'react-dom';
+import _ from 'lodash';
 
 export default class WeinerBlock extends Component {
   constructor(props) {
@@ -12,13 +14,12 @@ export default class WeinerBlock extends Component {
   }
 
   render() {
+    let isChecked = _.result(_.find(this.props.weinerData.weinerTo, {userId: this.props.currentUser}), 'userChecked');
     return (
       <div onClick={this.checkWeiner} className="weiner-block">
           <p>content: {this.props.weinerData.content}</p>
           <p>created: {this.props.weinerData.created}</p>
-          <p>weinerTo: {this.props.weinerData.weinerTo.map((weiner) => {
-              return weiner.userChecked;
-            })}</p>
+          <p>isChecked: {isChecked ? 'true' : 'false'}</p>
       </div>
 
     )
@@ -27,6 +28,7 @@ export default class WeinerBlock extends Component {
 
 WeinerBlock.displayName = 'WeinerBlock';
 WeinerBlock.propTypes = {
+  currentUser: PropTypes.number,
   onClick: PropTypes.function,
   weinerData: PropTypes.object
 };

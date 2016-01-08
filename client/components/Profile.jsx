@@ -38,7 +38,7 @@ export default class Profile extends React.Component {
 
           <p><b>my received weiners</b></p>
           {_.map(gotWeiners, (weiner) => {
-            return <WeinerBlock weinerData={weiner} onClick={this.checkWeiner} />
+            return <WeinerBlock weinerData={weiner} onClick={this.checkWeiner} currentUser={this.props.currentUser.userId} />
           })}
       </div>
 
