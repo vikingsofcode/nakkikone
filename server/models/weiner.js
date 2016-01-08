@@ -66,4 +66,8 @@ Weiner.findByWeinerId = function(weinerId, callback) {
     this.findOne(query, callback);
 };
 
+Weiner.updateWeinerTo = function(weiner, callback) {
+  this.updateOne({_id: weiner._id}, {$set: { weinerTo: weiner.weinerTo }}, callback);
+}
+
 module.exports = Weiner;

@@ -5,6 +5,8 @@ const Joi = require('joi');
 const internals = {};
 const config = require('../../../config');
 
+import _ from 'lodash';
+
 internals.applyRoutes = function (server, next) {
 
     const Weiner = server.plugins['hapi-mongo-models'].Weiner;
@@ -55,22 +57,26 @@ internals.applyRoutes = function (server, next) {
       });
 
       socket.on('weiner:set:checked', (data) => {
-        const update = {
-          weinerTo: [{
-            _id: data._id,
-            userId: data.userId,
-            avatar: data.avatar,
-            userChecked: true
-          }]
-        };
 
-        Weiner.findByIdAndUpdate(data._id, { $set: update }, (err, weiner) => {
+        Weiner.findById(data.id, (err, weiner) => {
           if (err) {
             return io.emit('weiner:error', err);
           }
 
-          return io.emit('weiner:checked', { weiner: weiner });
+          let index = _.findIndex(weiner.weinerTo, { 'userId': data.checkedWeiner.userId });
+
+          weiner.weinerTo[index].userChecked = true;
+
+          Weiner.updateWeinerTo(weiner, (err, savedWeiner) => {
+            if (err) {
+              return (err);
+            }
+
+              return io.emit('weiner:checked', { weiner: savedWeiner });
+          })
+
         });
+
 
       });
 

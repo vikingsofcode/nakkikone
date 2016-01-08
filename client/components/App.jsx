@@ -11,7 +11,11 @@ export default class App extends React.Component {
     super(props);
 
     this.state = {
-      selectedUsers: []
+      selectedUsers: [{
+        userId: '24',
+        avatar: 'user.avatar',
+        userChecked: false
+      }]
     }
 
     this.addWeiner = this.addWeiner.bind(this);
@@ -40,16 +44,21 @@ export default class App extends React.Component {
       userChecked: false
     }
 
+    let users = this.state.selectedUsers;
+
     if (_.includes(_.pluck(this.state.selectedUsers, 'userId'), user.userId)) {
       this.setState({ selectedUsers: _.remove(this.state.selectedUsers, _.indexOf(doc)) })
     } else {
-      this.setState({ selectedUsers: this.state.selectedUsers.concat(doc)});
+      this.setState({ selectedUsers: users.concat(doc)});
     }
 
   }
   render() {
-    // console.log(this.props.weiners);
-    // console.log(this.props.users);
+
+    let newWeiners = _.filter(this.props.weiners, (weiner) => {
+      return _.any(weiner.weinerTo, { 'userId': this.props.currentUser.userId, 'userChecked': false });
+    });
+
     let user = this.props.currentUser;
     let array = [];
     this.props.weiners.forEach((weiner) => {
@@ -62,7 +71,7 @@ export default class App extends React.Component {
     });
     return (
       <div>
-          <p>Current user: {user.username}</p>
+          <p>Current user: {user.username} - new weiners: {newWeiners.length}</p>
           <p><b>users</b></p>
           {userlist}
           <button onClick={this.addWeiner}>weiner plz</button>
