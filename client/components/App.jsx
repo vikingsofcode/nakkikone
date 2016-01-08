@@ -11,12 +11,8 @@ export default class App extends React.Component {
     super(props);
 
     this.state = {
-      selectedUsers: [{
-        userId: '24',
-        avatar: 'user.avatar',
-        userChecked: false
-      }]
-    }
+      selectedUsers: []
+    };
 
     this.addWeiner = this.addWeiner.bind(this);
     this.selectUser = this.selectUser.bind(this);
@@ -29,7 +25,7 @@ export default class App extends React.Component {
           username: this.props.currentUser.username
       },
       weinerTo: this.state.selectedUsers,
-      content: 'loltest',
+      content: this.refs.weinerContent.value,
       created: new Date(),
       status: 'IN PROGRESS'
     });
@@ -73,6 +69,7 @@ export default class App extends React.Component {
           <p>Current user: {user.username} - new weiners: {newWeiners.length}</p>
           <p><b>users</b></p>
           {userlist}
+          <input type="text" ref="weinerContent" className="weiner-input"/>
           <button onClick={this.addWeiner}>weiner plz</button>
           <p><b>weiners</b></p>
           {array}

@@ -12,11 +12,11 @@ exports.register = function (server, options, next) {
       method: 'GET',
       path: '/',
       handler: function(request, reply) {
-        
+
         if (request.yar.get(config.session.name)) {
           return reply.redirect('/weiner');
         } else {
-          return reply.view('Default');
+          return reply.view('Login');
         }
 
       }

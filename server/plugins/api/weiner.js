@@ -72,7 +72,7 @@ internals.applyRoutes = function (server, next) {
               return (err);
             }
 
-              return io.emit('weiner:checked', { weiner: savedWeiner }), io.emit('weiner:list');
+              return io.emit('weiner:checked', { weiner: savedWeiner }), findWeiners();
           })
 
         });
