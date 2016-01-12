@@ -109,7 +109,7 @@ internals.applyRoutes = function (server, next) {
             return io.emit('user:online', { userOffline: user });
           });
 
-          return reply.view('App');
+          return reply.view('App', { user: request.yar.get(config.session.name) });
         }
     });
 

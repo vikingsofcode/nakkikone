@@ -10,3 +10,8 @@ export const currentUser = createAction(CURRENT_USER, () => {
     return res.data;
   });
 });
+
+export const LOGOUT_USER = 'LOGOUT_USER';
+export const logoutUser = () => {
+  return axios.post('http://localhost:6678/logout');
+};

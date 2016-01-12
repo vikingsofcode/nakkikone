@@ -24,7 +24,7 @@ Weiner.schema = Joi.object().keys({
     })).required(),
     content: Joi.string(),
     created: Joi.date(),
-    status: Joi.string()
+    status: Joi.number()
 });
 
 Weiner.indexes = [

@@ -16,10 +16,20 @@ export default class WeinerBlock extends Component {
   render() {
     let isChecked = _.result(_.find(this.props.weinerData.weinerTo, {userId: this.props.currentUser}), 'userChecked');
     return (
-      <div onClick={this.checkWeiner} className="weiner-block">
-          <p>content: {this.props.weinerData.content}</p>
-          <p>created: {this.props.weinerData.created}</p>
-          <p>isChecked: {isChecked ? 'true' : 'false'}</p>
+      <div onClick={this.checkWeiner} className={`weiner-block ${isChecked ? 'checked' : 'not-checked'}`}>
+          <span className="weiner-block-title">{this.props.weinerData.content}</span>
+          <div className="weiner-block-users">
+            {this.props.weinerData.weinerTo.map((weiner) => {
+              return (
+                <div className="weiner-block-user" style={{
+                    backgroundImage: 'url(' + weiner.avatar + ')'
+                  }}></div>
+              )
+            })}
+          </div>
+          <div className="weiner-block-status">
+            {this.props.weinerData.status === 0 ? 'IN PROGRESS' : 'DONE'}
+          </div>
       </div>
 
     )

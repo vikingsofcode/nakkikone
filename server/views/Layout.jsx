@@ -13,11 +13,6 @@ export default class Layout extends React.Component {
       <body>
         <div className="navbar">
           <a href="/weiner" className="navbar-logo"></a>
-          <nav className="navbar-nav">
-            <a href="/weiner" >Home</a>
-            <a href="/weiner/profile">Profile</a>
-            <a href="#" >Logout</a>
-          </nav>
         </div>
         <div id="app"></div>
         <script src="/public/bundle.js"></script>
@@ -29,5 +24,6 @@ export default class Layout extends React.Component {
 
 Layout.displayName = 'Layout';
 Layout.propTypes = {
-  title: PropTypes.string
+  title: PropTypes.string,
+  user: PropTypes.object
 };

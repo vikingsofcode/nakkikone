@@ -52,7 +52,7 @@ internals.applyRoutes = function (server, next) {
       handler: (request, reply) => {
 
         if (request.yar.get(config.session.name)) {
-          return reply.view('Profile');
+          return reply.view('Profile', { user: request.yar.get(config.session.name) });
         } else {
           return reply.redirect('/');
         }

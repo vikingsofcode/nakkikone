@@ -5,7 +5,7 @@ import _ from 'lodash';
 import WeinerBlock from './weiners/WeinerBlock';
 import io from 'socket.io-client';
 let socket = io('http://localhost:6678');
-
+import CurrentUser from './users/CurrentUser'
 
 export default class Profile extends React.Component {
   constructor(props) {
@@ -30,6 +30,17 @@ export default class Profile extends React.Component {
 
     return (
       <div>
+        <CurrentUser userData={this.props.currentUser}
+        navItems={[
+          {
+            text: 'Profile',
+            link: '/weiner/profile'
+          },
+          {
+            text: 'Logout',
+            link: '#'
+          }
+        ]} />
           <p>Profile page</p>
           <p><b>my sent weiners</b></p>
           {_.map(myWeiners, (weiner) => {

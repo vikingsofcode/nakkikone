@@ -58,21 +58,24 @@ internals.applyRoutes = function (server, next) {
         }
       },
       handler: (request, reply) => {
-        const loggedUser = request.yar.get(config.session.name)._id;
 
-        const update = {
-          online: false
-        };
+        if (request.yar.get(config.session.name)) {
+          const loggedUser = request.yar.get(config.session.name)._id;
 
-        User.findByIdAndUpdate(loggedUser, { $set: update }, (err, user) => {
-          if (err) {
-            return io.emit('user:error', err);
-          }
-          return io.emit('user:offline', { userOffline: user });
-        });
+          const update = {
+            online: false
+          };
 
-        request.yar.reset();
-        return reply.redirect('/');
+          User.findByIdAndUpdate(loggedUser, { $set: update }, (err, user) => {
+            if (err) {
+              return io.emit('user:error', err);
+            }
+
+            request.yar.reset();
+            return reply.redirect('/'), io.emit('user:offline', { userOffline: user });
+          });
+
+        }
       }
     });
 
