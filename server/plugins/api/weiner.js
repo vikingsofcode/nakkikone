@@ -87,7 +87,7 @@ internals.applyRoutes = function (server, next) {
         path: '/weiner',
         config: {
           plugins: {
-            'hapi-io': 'connection'
+            'hapi-io': 'connection:online'
           }
         },
         handler: (request, reply) => {
@@ -106,7 +106,7 @@ internals.applyRoutes = function (server, next) {
             if (err) {
               return io.emit('user:error', err);
             }
-            return io.emit('user:online', { userOffline: user });
+            return io.emit('user:online', { userOnline: user });
           });
 
           return reply.view('App', { user: request.yar.get(config.session.name) });

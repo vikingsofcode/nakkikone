@@ -39,6 +39,7 @@ socket.on('user:list', (data) => {
 });
 
 function getUser() {
+  socket.emit('connection:online');
   let userActions = bindActionCreators(UserActions, store.dispatch);
   userActions.currentUser();
 }

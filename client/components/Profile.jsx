@@ -6,12 +6,19 @@ import WeinerBlock from './weiners/WeinerBlock';
 import io from 'socket.io-client';
 let socket = io('http://localhost:6678');
 import CurrentUser from './users/CurrentUser'
+import * as UserActions from '../actions/users';
 
 export default class Profile extends React.Component {
   constructor(props) {
     super(props);
 
     this.checkWeiner = this.checkWeiner.bind(this);
+  }
+
+  componentDidMount() {
+    if (!this.props.currentUser.userId) {
+      this.props.userActions.currentUser();
+    }
   }
 
   checkWeiner(weiner) {
@@ -60,6 +67,7 @@ export default class Profile extends React.Component {
 Profile.displayName = 'Profile';
 Profile.propTypes = {
   currentUser: PropTypes.object,
+  userActions: PropTypes.object,
   users: PropTypes.array,
   weiners: PropTypes.array
 };
@@ -74,6 +82,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    userActions: bindActionCreators(UserActions, dispatch)
   }
 }
 
