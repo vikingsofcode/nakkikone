@@ -14,6 +14,7 @@ export default class UserBlock extends Component {
   render() {
     return (
       <div onClick={this.selectUser} className="user-block">
+        <div className={`user-block-status ${this.props.userData.online ? 'online' : 'offline'}`}></div>
         <div className="user-block-image" style={{
             backgroundImage: 'url(' + this.props.userData.avatar + ')'
           }}></div>

@@ -13,32 +13,28 @@ a
   text-decoration: none
 
 body
-  background: #e2e2e2
+  background: linear-gradient(to bottom, #00a79d, rgba(57, 181, 74, 0.35))
   font-family: Helvetica, Arial, Verdana, sans-serif
+  color: #fff
 
 *
   box-sizing: border-box
 
 .navbar,
 #app
-  width: 75%
   margin: 0 auto
   position: relative
 
 .navbar
-  background: #098e91
-  height: 55px
-  border-radius: 5px 5px 0 0
-  margin-top: 35px
+  height: 80px
 
 .navbar-logo
   display: inline-block
   width: 95px
   height: 100%
   vertical-align: top
-  background: url('/img/weiner-machine-logo.svg') #126664 no-repeat center center
+  background: url('/img/weiner-machine-logo.svg') no-repeat center center
   background-size: 55px
-  border-radius: 5px 0 0 0
 
 .navbar-nav
   display: inline-block
@@ -54,11 +50,14 @@ body
     padding: 0 25px
 
 #app
-  background: #eee
-  height: 750px
+  height: calc(100% - 80px)
+  width: 100%
 
 .weiner-app
-  height: 100%
+  height: calc(100% - 10px)
+  width: 100%
+  padding 45px
+  background: rgba(0, 0, 0, 0.25)
 
 .user-list
   display: inline-block
@@ -67,15 +66,34 @@ body
   overflow-x: hidden
   overflow-y: auto
   height: 100%
-  background: #ccc
 
 .user-block
-  background: #fff
+  background: rgba(255, 255, 255, 0.15)
   height: 50px
   cursor: pointer
+  margin-bottom: 5px
+  border-radius: 35px
+  color: #fff
+  position: relative
+  width: 90%
+  left: 25px
 
   &:hover
-    background: #f3f3f3
+    background: rgba(255, 255, 255, 0.25)
+
+.user-block-status
+  position: absolute
+  width: 15px
+  height: 15px
+  border-radius: 50%
+  left: -25px
+  background: #4eb5ab
+  top: 50%
+  transform: translateY(-50%)
+
+  &.online
+    background: #90ed0c
+
 
 .user-block-image
   width: 50px
@@ -85,6 +103,7 @@ body
   display: inline-block
   vertical-align: middle
   margin-right: 15px
+  border-radius: 35px
 
 .user-block-content
   display: inline-block
@@ -97,21 +116,26 @@ body
   overflow-x: hidden
   overflow-y: auto
   height: 100%
-  background: #ccc
-  right: 0
-  top: 0
+  right: 45px
+  top: 45px
 
 .send-weiner
   display: inline-block
   width: calc(100% - 600px)
   vertical-align: top
+  padding: 0 45px
 
 .weiner-input
   display: inline-block
   width: calc(100% - 150px)
-  padding: 17px
+  padding: 17px 45px
   border: 0
   font-size: 26px
+  border-radius: 35px 0 0 35px
+  box-shadow: 0 5px 0 #ccc
+
+  &:focus
+    outline: 0
 
 .btn
   display: inline-block
@@ -124,27 +148,48 @@ body
 .btn-add-weiner
   width: 150px
   padding: 25px
-  background: #00eedd
+  height: 64px
+  background: #f49334
+  border-radius: 0 35px 35px 0
+  box-shadow: 0 5px 0 #b55c1f
+  color: #9b470d
+  font-size: 16px
+
+  &:focus
+    outline: 0
 
   &:disabled
+    color: #aaa
     background: #ccc
+    box-shadow: 0 5px 0 #aaa
+
+.send-weiner-people
+  width: calc(100% - 90px)
+  margin: 30px auto 0
+
+  &::before
+    display: block
+    content: ''
+    width: calc(100% - 90px)
+    height: 1px
+    background: rgba(255, 255, 255, 0.34)
+    margin: 0 auto 25px
+
+  .weiner-person
+    display: inline-block
+    padding: 25px
 
 .weiner-block
   display: block
   padding: 15px
-  background: #fff
-
-  &.checked
-    border: 0
-
-  &.not-checked
-    border: 1px solid #00eedd
+  background: rgba(255, 255, 255, 0.15)
+  border-radius: 35px
+  margin-bottom: 5px
 
 .weiner-block-title
   display: block
   font-weight: 700
   margin-bottom: 10px
-  border-bottom: 1px solid #ccc
 
 .weiner-block-user
   display: inline-block
@@ -155,7 +200,7 @@ body
 
 .current-user-block
   position: absolute
-  top: 0
+  top: -50px
   right: 0
   z-index: 10
 

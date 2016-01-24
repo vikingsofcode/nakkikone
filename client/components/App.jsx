@@ -10,7 +10,7 @@ import './main.styl';
 import * as UserActions from '../actions/users';
 import CurrentUser from './users/CurrentUser'
 
-export default class App extends React.Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
 
@@ -43,6 +43,7 @@ export default class App extends React.Component {
   selectUser(user) {
     const doc = {
       userId: user.userId,
+      username: user.username,
       avatar: user.avatar,
       userChecked: false
     }
@@ -65,23 +66,6 @@ export default class App extends React.Component {
     this.props.userActions.logoutUser();
   }
   render() {
-    let newWeiners = _.filter(this.props.weiners, (weiner) => {
-      return _.any(weiner.weinerTo, { 'userId': this.props.currentUser.userId, 'userChecked': false });
-    });
-
-    let user = this.props.currentUser;
-    let array = [];
-    this.props.weiners.forEach((weiner) => {
-      if (weiner.status !== 1) {
-        array.push(<WeinerBlock key={weiner._id} weinerData={weiner} />);
-      }
-
-    });
-
-    let userlist = [];
-    this.props.users.forEach((user) => {
-      userlist.push(<UserBlock key={user.userId} userData={user} onClick={this.selectUser}/>);
-    });
 
     return (
       <div className="weiner-app">
@@ -97,29 +81,34 @@ export default class App extends React.Component {
           }
         ]} />
           <div className="user-list">
-            {userlist}
+            {this.props.users.map((user) => {
+              return (<UserBlock key={user.userId} userData={user} onClick={this.selectUser}/>);
+              })
+            }
           </div>
-
-          <a href="#" onClick={this.logout}>logout lol</a>
 
           <div className="send-weiner">
             <input type="text" ref="weinerContent" value={this.state.weinerContent} onChange={this.handleChange} className="weiner-input"/>
             <button onClick={this.addWeiner} className="btn btn-add-weiner" disabled={
                 !this.state.weinerContent.length ||
                    !this.state.selectedUsers.length
-                 }>weiner plz</button>
+                 }>Weiner away!</button>
 
 
-                <p>
-                  <b>Selected people:</b>
-                  <span>{this.state.selectedUsers.map((user) => {
-                      return user.userId;
-                    })}</span>
-                </p>
+               <div className="send-weiner-people">
+                  <p>Weiner these people:</p>
+                    {this.state.selectedUsers.map((user) => {
+                        return (<div className="weiner-person">{user.username}</div>);
+                      })}
+                </div>
           </div>
 
           <div className="weiner-list">
-            {array}
+            {this.props.weiners.map((weiner) => {
+              if (weiner.status !== 1) {
+                return (<WeinerBlock key={weiner._id} weinerData={weiner} />);
+              }
+            })}
           </div>
       </div>
 

@@ -25,9 +25,6 @@ socket.on('user:error', (data) => {
   console.log(data);
 });
 
-socket.emit('weiner:get');
-socket.emit('user:get');
-
 socket.on('weiner:list', (data) => {
   let weinerActions = bindActionCreators(WeinerActions, store.dispatch);
   weinerActions.setWeiners(data);
@@ -40,6 +37,8 @@ socket.on('user:list', (data) => {
 
 function getUser() {
   socket.emit('connection:online');
+  socket.emit('weiner:get');
+  socket.emit('user:get');
   let userActions = bindActionCreators(UserActions, store.dispatch);
   userActions.currentUser();
 }

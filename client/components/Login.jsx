@@ -1,18 +1,17 @@
 import React, { Component, PropTypes } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import io from 'socket.io-client';
-let socket = io('http://localhost:6678');
+import './login.styl';
 
-export default class Login extends React.Component {
+export default class Login extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
     return (
-      <div>
-          <a href="/login">github login</a>
+      <div className="login">
+          <div className="login-logo"></div>
+          <a href="/login" className="btn btn-login">GitHub Login</a>
       </div>
 
     )
@@ -32,12 +31,6 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-  }
-}
-
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(Login);
