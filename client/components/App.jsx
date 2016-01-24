@@ -9,6 +9,7 @@ import WeinerBlock from './weiners/WeinerBlock';
 import './main.styl';
 import * as UserActions from '../actions/users';
 import CurrentUser from './users/CurrentUser'
+import LazyLoad from 'react-lazyload';
 
 export default class App extends Component {
   constructor(props) {
@@ -66,11 +67,20 @@ export default class App extends Component {
     this.props.userActions.logoutUser();
   }
   render() {
+    let weinerList = this.props.weiners.length ? this.props.weiners.map((weiner) => {
+    if (weiner.status !== 1) {
+      return (<LazyLoad offset={10}><WeinerBlock key={weiner._id} weinerData={weiner} /></LazyLoad>);
+    }
+  }) : 'No weiners :(';
 
     return (
       <div className="weiner-app">
         <CurrentUser userData={this.props.currentUser}
         navItems={[
+          {
+            text: 'Home',
+            link: '/weiner'
+          },
           {
             text: 'Profile',
             link: '/weiner/profile'
@@ -88,11 +98,22 @@ export default class App extends Component {
           </div>
 
           <div className="send-weiner">
-            <input type="text" ref="weinerContent" value={this.state.weinerContent} onChange={this.handleChange} className="weiner-input"/>
-            <button onClick={this.addWeiner} className="btn btn-add-weiner" disabled={
+            <input type="text"
+              value={this.state.weinerContent}
+              onChange={this.handleChange}
+              className="weiner-input"
+              placeholder="What kind of a weiner is this?"
+              maxLength="50"/>
+            <button onClick={this.addWeiner}
+              className="btn btn-add-weiner"
+              disabled={
                 !this.state.weinerContent.length ||
                    !this.state.selectedUsers.length
-                 }>Weiner away!</button>
+                 }>
+                 Weiner away!
+               </button>
+
+               <span className="char-count">{50 - this.state.weinerContent.length}</span>
 
 
                <div className="send-weiner-people">
@@ -104,11 +125,7 @@ export default class App extends Component {
           </div>
 
           <div className="weiner-list">
-            {this.props.weiners.map((weiner) => {
-              if (weiner.status !== 1) {
-                return (<WeinerBlock key={weiner._id} weinerData={weiner} />);
-              }
-            })}
+            {weinerList}
           </div>
       </div>
 

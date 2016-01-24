@@ -115,7 +115,7 @@ body
   width: 300px
   overflow-x: hidden
   overflow-y: auto
-  height: 100%
+  height: calc(100% - 115px)
   right: 45px
   top: 45px
 
@@ -124,6 +124,7 @@ body
   width: calc(100% - 600px)
   vertical-align: top
   padding: 0 45px
+  position: relative
 
 .weiner-input
   display: inline-block
@@ -163,6 +164,14 @@ body
     background: #ccc
     box-shadow: 0 5px 0 #aaa
 
+.char-count
+  position: absolute
+  color: #ccc
+  top: 23px
+  right: 220px
+  z-index: 10
+  font-size: 18px
+
 .send-weiner-people
   width: calc(100% - 90px)
   margin: 30px auto 0
@@ -181,9 +190,9 @@ body
 
 .weiner-block
   display: block
-  padding: 15px
+  padding: 25px
   background: rgba(255, 255, 255, 0.15)
-  border-radius: 35px
+  border-radius: 45px
   margin-bottom: 5px
 
 .weiner-block-title
@@ -197,6 +206,7 @@ body
   height: 25px
   background-position: center center
   background-size: cover
+  border-radius: 50%
 
 .current-user-block
   position: absolute

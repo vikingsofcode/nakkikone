@@ -19,6 +19,7 @@ Weiner.schema = Joi.object().keys({
     }).required(),
     weinerTo: Joi.array().items(Joi.object().keys({
       userId: Joi.number().required(),
+      username: Joi.string().required(),
       avatar: Joi.string().required(),
       userChecked: Joi.boolean().required()
     })).required(),

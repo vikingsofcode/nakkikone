@@ -36,9 +36,13 @@ export default class Profile extends React.Component {
     });
 
     return (
-      <div>
+      <div className="weiner-app">
         <CurrentUser userData={this.props.currentUser}
         navItems={[
+          {
+            text: 'Home',
+            link: '/weiner'
+          },
           {
             text: 'Profile',
             link: '/weiner/profile'
@@ -48,7 +52,6 @@ export default class Profile extends React.Component {
             link: '#'
           }
         ]} />
-          <p>Profile page</p>
           <p><b>my sent weiners</b></p>
           {_.map(myWeiners, (weiner) => {
             return <WeinerBlock weinerData={weiner} />

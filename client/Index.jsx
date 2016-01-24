@@ -49,7 +49,7 @@ render(
       <Route path="/">
       <IndexRoute component={Login} />
       <Route path="weiner" component={App} onEnter={getUser} />
-      <Route path="weiner/profile" component={Profile} />
+      <Route path="weiner/profile" component={Profile} onEnter={getUser}/>
       </Route>
     </Router>
   </Provider>,

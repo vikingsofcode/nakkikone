@@ -17,7 +17,7 @@ export default class WeinerBlock extends Component {
     let isChecked = _.result(_.find(this.props.weinerData.weinerTo, {userId: this.props.currentUser}), 'userChecked');
     return (
       <div onClick={this.checkWeiner} className={`weiner-block ${isChecked ? 'checked' : 'not-checked'}`}>
-          <span className="weiner-block-title">{this.props.weinerData.content}</span>
+          {this.props.weinerData.weinerFrom.username} weinered: <span className="weiner-block-title">{this.props.weinerData.content}</span>
           <div className="weiner-block-users">
             {this.props.weinerData.weinerTo.map((weiner) => {
               return (
@@ -26,9 +26,6 @@ export default class WeinerBlock extends Component {
                   }}></div>
               )
             })}
-          </div>
-          <div className="weiner-block-status">
-            {this.props.weinerData.status === 0 ? 'IN PROGRESS' : 'DONE'}
           </div>
       </div>
 

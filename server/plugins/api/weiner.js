@@ -18,7 +18,7 @@ internals.applyRoutes = function (server, next) {
         if (err) {
           return io.emit('weiner:error', err);
         }
-        return io.emit('weiner:list', { weiners: results });
+        return io.emit('weiner:list', { weiners: results.reverse() });
       });
     }
 
