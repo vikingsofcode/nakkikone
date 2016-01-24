@@ -1,4 +1,4 @@
-# Vikings of Code - React project template
+# Weiner Machine - It's all about the beef
 
 ## Built with [Hapi](http://hapijs.com), [React](https://facebook.github.io/react/) and [Webpack](https://webpack.github.io/)
 ```
