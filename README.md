@@ -2,7 +2,7 @@
 
 ## Built with [Hapi](http://hapijs.com), [React](https://facebook.github.io/react/) and [Webpack](https://webpack.github.io/)
 ```
-git clone https://github.com/vikingsofcode/react-project-template.git <project name>
+git clone https://github.com/vikingsofcode/weiner-machine.git <project name>
 cd <project name>
 npm install
 npm run dev
