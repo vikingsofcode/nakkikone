@@ -1,0 +1,92 @@
+.current-user-block
+  background: #0a655f
+  height: 80px
+  position: absolute
+  top: -80px
+  right: 0
+  z-index: 10
+  cursor: pointer
+
+.current-user-info
+  position: relative
+  top: 50%
+  transform: translateY(-50%)
+  padding: 0 25px
+
+.current-user-name,
+.current-user-image
+  display: inline-block
+  vertical-align: middle
+
+.current-user-image
+  width: 50px
+  height: 50px
+  border-radius: 50%
+  background: #fff
+  margin-right: 25px
+  background-position: center center
+  background-size: cover
+
+.navbar-nav
+  display: none
+  text-align: center
+  top: 80px
+  position: absolute
+  right: 0
+  left: 0
+  margin: 0 auto
+  width: 125px
+
+  &.nav-open
+    display: block
+
+  &::before
+    content: ''
+    display: block
+    position: absolute
+    top: -10px
+    right: 0
+    left: 0
+    margin 0 auto
+    width: 20px
+    height: 20px
+    background: #02534e
+    border-radius: 50%
+    z-index: -1
+
+  a
+    display: block
+    color: #fff
+    height: 100%
+    line-height: 55px
+    background: #02534e
+    padding: 0 25px
+
+    &:first-child
+      border-radius: 5px 5px 0 0
+
+    &:last-child
+      border-radius: 0 0 5px 5px
+
+    &:hover
+      background: #024642
+
+.new-weiners
+  position: absolute
+  width: 30px
+  height: 30px
+  background: #0ceded
+  border: 2px solid #0a655f
+  border-radius: 50%
+  text-align: center
+  left: -15px
+  z-index: 2
+  top: 50%
+  transform: translateY(-50%)
+  color: #0a655f
+  font-size: 12px
+
+  span
+    position: relative
+    top: 23%
+    transform: translateY(-50%)

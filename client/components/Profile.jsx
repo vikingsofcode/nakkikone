@@ -13,6 +13,7 @@ export default class Profile extends React.Component {
     super(props);
 
     this.checkWeiner = this.checkWeiner.bind(this);
+    this.logout = this.logout.bind(this);
   }
 
   componentDidMount() {
@@ -27,6 +28,10 @@ export default class Profile extends React.Component {
     socket.emit('weiner:set:checked', {id: weiner._id, checkedWeiner: setChecked});
   }
 
+  logout() {
+    this.props.userActions.logoutUser();
+  }
+
   render() {
 
     let myWeiners = _.filter(this.props.weiners, {'weinerFrom': { 'userId': this.props.currentUser.userId }});
@@ -37,8 +42,9 @@ export default class Profile extends React.Component {
 
     return (
       <div className="weiner-app">
-        <CurrentUser userData={this.props.currentUser}
-        navItems={[
+        <CurrentUser
+          userData={this.props.currentUser}
+          navItems={[
           {
             text: 'Home',
             link: '/weiner'
@@ -49,9 +55,11 @@ export default class Profile extends React.Component {
           },
           {
             text: 'Logout',
-            link: '#'
+            link: '#',
+            onClick: this.logout
           }
-        ]} />
+        ]}
+        weiners={this.props.weiners}/>
           <p><b>my sent weiners</b></p>
           {_.map(myWeiners, (weiner) => {
             return <WeinerBlock weinerData={weiner} />

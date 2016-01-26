@@ -75,21 +75,25 @@ export default class App extends Component {
 
     return (
       <div className="weiner-app">
-        <CurrentUser userData={this.props.currentUser}
-        navItems={[
-          {
-            text: 'Home',
-            link: '/weiner'
-          },
-          {
-            text: 'Profile',
-            link: '/weiner/profile'
-          },
-          {
-            text: 'Logout',
-            link: '#'
-          }
-        ]} />
+        <CurrentUser
+          userData={this.props.currentUser}
+          navItems={[
+            {
+              text: 'Home',
+              link: '/weiner'
+            },
+            {
+              text: 'Profile',
+              link: '/weiner/profile'
+            },
+            {
+              text: 'Logout',
+              link: '/',
+              onClick: this.logout
+            }
+          ]}
+          weiners={this.props.weiners}
+        />
           <div className="user-list">
             {this.props.users.map((user) => {
               return (<UserBlock key={user.userId} userData={user} onClick={this.selectUser}/>);

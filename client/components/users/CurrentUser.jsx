@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import DropDownMenu from '../common/DropDownMenu';
+import './current-user.styl';
+import _ from 'lodash';
 
 export default class CurrentUser extends Component {
   constructor(props) {
@@ -18,17 +20,25 @@ export default class CurrentUser extends Component {
 
   render() {
 
-    // let newWeiners = _.filter(this.props.weiners, (weiner) => {
-    //   return _.any(weiner.weinerTo, { 'userId': this.props.currentUser.userId, 'userChecked': false });
-    // });
+    let newWeiners = _.filter(this.props.weiners, (weiner) => {
+      return _.any(weiner.weinerTo, { 'userId': this.props.userData.userId, 'userChecked': false });
+    }).length;
+
     return (
       <div className="current-user-block" onClick={this.openNav}>
-        <div className="current-user-image">
-        </div>
-        <div className="current-user-name">
-          {this.props.userData &&
-            this.props.userData.username
-          }
+        {newWeiners > 0 &&
+          <div className="new-weiners"><span>{newWeiners}</span></div>
+        }
+        <div className="current-user-info">
+          <div className="current-user-image" style={{
+              backgroundImage: 'url(' + this.props.userData.avatar + ')'
+            }}>
+          </div>
+          <div className="current-user-name">
+            {this.props.userData &&
+              this.props.userData.username
+            }
+          </div>
         </div>
         <DropDownMenu navItems={this.props.navItems} isNavOpen={this.state.isNavOpen}/>
       </div>
@@ -40,7 +50,8 @@ export default class CurrentUser extends Component {
 CurrentUser.displayName = 'CurrentUser';
 CurrentUser.propTypes = {
   navItems: PropTypes.array,
-  userData: PropTypes.object
+  userData: PropTypes.object,
+  weiners: PropTypes.array
 };
 
 

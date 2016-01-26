@@ -11,7 +11,7 @@ export default class DropDownMenu extends Component {
     return (
       <nav className={`navbar-nav ${this.props.isNavOpen ? 'nav-open' : ''}`}>
         {this.props.navItems.map((item, index) => {
-          return <Link to={item.link} key={index}>{item.text}</Link>
+          return <a href={item.link} key={index} onClick={item.onClick}>{item.text}</a>
         })}
       </nav>
 
@@ -21,6 +21,7 @@ export default class DropDownMenu extends Component {
 
 DropDownMenu.displayName = 'DropDownMenu';
 DropDownMenu.propTypes = {
+  isNavOpen: PropTypes.bool,
   navItems: PropTypes.array
 };
 
