@@ -12,10 +12,22 @@ export default class CurrentUser extends Component {
     };
 
     this.openNav = this.openNav.bind(this);
+    this.handleBodyClick = this.handleBodyClick.bind(this);
+  }
+
+  componentDidMount() {
+    document.body.addEventListener('click', this.handleBodyClick);
+  }
+  componentWillUnmount() {
+    document.body.removeEventListener('click', this.handleBodyClick);
   }
 
   openNav() {
     this.setState({ isNavOpen: !this.state.isNavOpen });
+  }
+
+  handleBodyClick() {
+    this.setState({ isNavOpen: false });
   }
 
   render() {
