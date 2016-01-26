@@ -69,7 +69,7 @@ export default class App extends Component {
   render() {
     let weinerList = this.props.weiners.length ? this.props.weiners.map((weiner) => {
     if (weiner.status !== 1) {
-      return (<LazyLoad offset={10}><WeinerBlock key={weiner._id} weinerData={weiner} /></LazyLoad>);
+      return (<LazyLoad><WeinerBlock key={weiner._id} weinerData={weiner} enableChecking={false}/></LazyLoad>);
     }
   }) : 'No weiners :(';
 

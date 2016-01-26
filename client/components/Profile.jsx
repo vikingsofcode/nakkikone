@@ -7,8 +7,10 @@ import io from 'socket.io-client';
 let socket = io('http://localhost:6678');
 import CurrentUser from './users/CurrentUser'
 import * as UserActions from '../actions/users';
+import './profile.styl';
+import LazyLoad from 'react-lazyload';
 
-export default class Profile extends React.Component {
+export default class Profile extends Component {
   constructor(props) {
     super(props);
 
@@ -60,15 +62,31 @@ export default class Profile extends React.Component {
           }
         ]}
         weiners={this.props.weiners}/>
-          <p><b>my sent weiners</b></p>
-          {_.map(myWeiners, (weiner) => {
-            return <WeinerBlock weinerData={weiner} />
-          })}
+      <div className="weiners-stat-list">
+          <div className="received-weiners">
+            <h1>Received weiners</h1>
+            <div className="received-weiners-stats">
+              <span>Dayum, you've been weinered <span className="weiner-stats-count">{gotWeiners.length}</span> times, man!</span>
+            </div>
+            <div className="received-weiners-list">
+              {_.map(gotWeiners, (weiner) => {
+                return (<LazyLoad><WeinerBlock weinerData={weiner} onClick={this.checkWeiner} currentUser={this.props.currentUser.userId} enableChecking={true}/></LazyLoad>)
+              })}
+            </div>
+          </div>
 
-          <p><b>my received weiners</b></p>
-          {_.map(gotWeiners, (weiner) => {
-            return <WeinerBlock weinerData={weiner} onClick={this.checkWeiner} currentUser={this.props.currentUser.userId} />
-          })}
+          <div className="sent-weiners">
+            <h1>Sent weiners</h1>
+            <div className="sent-weiners-stats">
+              <span>Whoah, dude... You have weinered people <span className="weiner-stats-count">{myWeiners.length}</span> times, man!</span>
+            </div>
+            <div className="sent-weiners-list">
+              {_.map(myWeiners, (weiner) => {
+                return (<LazyLoad><WeinerBlock weinerData={weiner} onClick={this.checkWeiner} currentUser={this.props.currentUser.userId} enableChecking={false}/></LazyLoad>)
+              })}
+            </div>
+          </div>
+        </div>
       </div>
 
     )
