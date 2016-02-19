@@ -1,56 +1,47 @@
-var Joi = require('joi');
-var uuid = require('node-uuid');
-var async = require('async');
-var mongoose = require('mongoose');
+const Joi = require('joi');
+const async = require('async');
+const ObjectAssign = require('object-assign');
+const BaseModel = require('hapi-mongo-models').BaseModel;
 
-var Weiner = function () {
-};
-// Weiner schema for mongo db
-Weiner.Schema = mongoose.Schema({
-    weinerFrom: {
-        userid: { type: String, index: true},
-        username: String
-    },
-    weinerTo: [{
-        userid: { type: String, index: true},
-        avatar: String,
-        userChecked: Boolean
-    }],
-    content: String,
-    created: Date,
-    status: String
+const Weiner = BaseModel.extend({
+    constructor: function (attrs) {
+        ObjectAssign(this, attrs);
+    }
 });
 
-// Validate weiner schema - check that all values are whats expected
-Weiner.Schema.method.validate = function(obj) {
-  var schema = {
-    weinerFrom: Joi.object().required().keys({
-        userid: Joi.string(),
-        username: Joi.string()
-    }),
-    weinerTo: Joi.array().required().keys({
-        userid: Joi.string(),
-        avatar: Joi.string(),
-        userChecked: Joi.boolean()
-    }),
-    content: Joi.string(),
-    created: Joi.date,
-    status: Joi.string()
-  };
-  return Joi.validate(obj, schema);
-};
+Weiner._collection = 'weiners';
 
-Weiner.Model = mongoose.model('weiners', Weiner.Schema);
-Weiner.ensureIndexes = Weiner.Model.ensureIndexes();
+Weiner.schema = Joi.object().keys({
+    _id: Joi.object(),
+    weinerFrom: Joi.object().keys({
+        userId: Joi.number().required(),
+        username: Joi.string().required()
+    }).required(),
+    weinerTo: Joi.array().items(Joi.object().keys({
+      userId: Joi.number().required(),
+      username: Joi.string().required(),
+      avatar: Joi.string().required(),
+      userChecked: Joi.boolean().required()
+    })).required(),
+    content: Joi.string(),
+    created: Joi.date(),
+    status: Joi.number()
+});
+
+Weiner.indexes = [
+    { key: { 'weinerFrom.userId': 1, unique: true } },
+    { key: { 'weinerTo.userId': 1, unique: true } }
+];
 
 // Create and save weiner to database.
-Weiner.create = function (weiner, callback) {
+Weiner.create = function(weiner, callback) {
 
-    var self = this;
+    const self = this;
 
     async.auto({
-        newWeiner: function (done, results) {
-            var document = {
+        newWeiner: (done) => {
+
+            const doc = {
                 weinerFrom: weiner.weinerFrom,
                 weinerTo: weiner.weinerTo,
                 content: weiner.content,
@@ -58,13 +49,12 @@ Weiner.create = function (weiner, callback) {
                 status: weiner.status
             };
 
-            var weinersave = new Weiner.Model(document);
-            weinersave.save(done);
+            self.insertOne(doc, done);
         }
-    }, function (err, results) {
+    }, (err, results) => {
 
         if (err) {
-            return callback(err);
+          return callback(err);
         }
 
         callback(null, results.newWeiner[0]);
@@ -72,11 +62,13 @@ Weiner.create = function (weiner, callback) {
 };
 
 // Get weiner by id.
-Weiner.findByWeinerId = function (Weinerid, callback) {
-    var query = { WeinerId: Weinerid };
-    Weiner.Model.findOne(query, callback);
+Weiner.findByWeinerId = function(weinerId, callback) {
+    const query = { _id: weinerId };
+    this.findOne(query, callback);
 };
 
-
+Weiner.updateWeinerTo = function(weiner, callback) {
+  this.updateOne({_id: weiner._id}, {$set: { weinerTo: weiner.weinerTo }}, callback);
+}
 
 module.exports = Weiner;

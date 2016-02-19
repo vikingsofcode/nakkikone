@@ -1,0 +1,217 @@
+html,
+body
+  margin: 0
+  padding: 0
+  width: 100%
+  height: 100%
+  overflow: hidden
+
+p
+  margin: 0
+
+a
+  text-decoration: none
+
+body
+  background: linear-gradient(to bottom, #00a79d, rgba(57, 181, 74, 0.35))
+  font-family: Helvetica, Arial, Verdana, sans-serif
+  color: #fff
+
+*
+  box-sizing: border-box
+
+.navbar,
+#app
+  margin: 0 auto
+  position: relative
+
+.navbar
+  height: 80px
+
+.navbar-logo
+  display: inline-block
+  width: 95px
+  height: 100%
+  vertical-align: top
+  background: url('/img/weiner-machine-logo.svg') no-repeat center center
+  background-size: 55px
+
+#app
+  height: calc(100% - 80px)
+  width: 100%
+
+.weiner-app
+  height: calc(100% - 10px)
+  width: 100%
+  padding 45px
+  background: rgba(0, 0, 0, 0.25)
+
+.user-list
+  display: inline-block
+  position: relative
+  width: 300px
+  overflow-x: hidden
+  overflow-y: auto
+  height: 100%
+
+.user-block
+  background: rgba(255, 255, 255, 0.15)
+  height: 50px
+  cursor: pointer
+  margin-bottom: 5px
+  border-radius: 35px
+  color: #fff
+  position: relative
+  width: 90%
+  left: 25px
+
+  &:hover
+    background: rgba(255, 255, 255, 0.25)
+
+.user-block-status
+  position: absolute
+  width: 15px
+  height: 15px
+  border-radius: 50%
+  left: -25px
+  background: #4eb5ab
+  top: 50%
+  transform: translateY(-50%)
+
+  &.online
+    background: #90ed0c
+
+
+.user-block-image
+  width: 50px
+  height: 50px
+  background-position: center center
+  background-size: cover
+  display: inline-block
+  vertical-align: middle
+  margin-right: 15px
+  border-radius: 35px
+
+.user-block-content
+  display: inline-block
+  vertical-align: middle
+  width: calc(100% - 115px)
+
+.weiner-list
+  position: absolute
+  width: 300px
+  overflow-x: hidden
+  overflow-y: auto
+  height: calc(100% - 115px)
+  right: 45px
+  top: 45px
+
+.send-weiner
+  display: inline-block
+  width: calc(100% - 600px)
+  vertical-align: top
+  padding: 0 45px
+  position: relative
+
+.weiner-input
+  display: inline-block
+  width: calc(100% - 150px)
+  padding: 17px 45px
+  border: 0
+  font-size: 26px
+  border-radius: 35px 0 0 35px
+  box-shadow: 0 5px 0 #ccc
+
+  &:focus
+    outline: 0
+
+.btn
+  display: inline-block
+  appearance: none
+  border: 0
+  padding 15px 25px
+  vertical-align: top
+  cursor: pointer
+
+.btn-add-weiner
+  width: 150px
+  padding: 25px
+  height: 64px
+  background: #f49334
+  border-radius: 0 35px 35px 0
+  box-shadow: 0 5px 0 #b55c1f
+  color: #9b470d
+  font-size: 16px
+
+  &:focus
+    outline: 0
+
+  &:disabled
+    color: #aaa
+    background: #ccc
+    box-shadow: 0 5px 0 #aaa
+
+.char-count
+  position: absolute
+  color: #ccc
+  top: 23px
+  right: 220px
+  z-index: 10
+  font-size: 18px
+
+.send-weiner-people
+  width: calc(100% - 90px)
+  margin: 30px auto 0
+
+  &::before
+    display: block
+    content: ''
+    width: calc(100% - 90px)
+    height: 1px
+    background: rgba(255, 255, 255, 0.34)
+    margin: 0 auto 25px
+
+  .weiner-person
+    display: inline-block
+    padding: 25px
+
+.weiner-block
+  display: block
+  padding: 25px
+  background: rgba(255, 255, 255, 0.15)
+  border-radius: 45px
+  margin-bottom: 5px
+
+.weiner-block-title
+  display: block
+  font-weight: 700
+  margin-bottom: 10px
+
+.weiner-block-user
+  display: inline-block
+  width: 25px
+  height: 25px
+  background-position: center center
+  background-size: cover
+  border-radius: 50%
+
+.weiner-wrap
+  position: relative
+
+.weiner-controls
+  position: absolute
+  top: 50%
+  transform: translateY(-50%)
+  right: 25px
+
+  .weiner-check
+    color: rgba(255,255,255,.5)
+    cursor: pointer
+
+    &:hover
+      color: rgba(255,255,255,1)
+
+.right-col
+  position: absolute
+  right: 0
+  top: 0

@@ -1,21 +1,30 @@
-var path       = require('path'),
-    publicPath = path.join(__dirname, '../../../client/'),
+'use strict';
+let path       = require('path'),
+    publicPath = path.join(__dirname, '../../../build/'),
     imgPath    = path.join(__dirname, '../../../client/media'),
     baseUrl    = '/';
 
-exports.register = function (plugin, options, next) {
+const config = require('../../../config');
 
-  plugin.route({
+exports.register = function (server, options, next) {
+
+  server.route({
       method: 'GET',
       path: '/',
-      handler: function (request, reply) {
-        return reply.view('index');
+      handler: function(request, reply) {
+
+        if (request.yar.get(config.session.name)) {
+          return reply.redirect('/weiner');
+        } else {
+          return reply.view('Login');
+        }
+
       }
-    
+
   });
 
   // Template partials
-  plugin.route({
+  server.route({
     path: baseUrl + 'views/{name}',
     method: 'GET',
     handler: function(request, reply) {
@@ -23,7 +32,7 @@ exports.register = function (plugin, options, next) {
     }
   });
 
-  plugin.route({
+  server.route({
     method: 'GET',
     path: baseUrl + 'public/{path*}',
     handler: {
@@ -33,7 +42,7 @@ exports.register = function (plugin, options, next) {
     }
   });
 
-  plugin.route({
+  server.route({
     method: 'GET',
     path: baseUrl + 'img/{path*}',
     handler: {
@@ -47,5 +56,6 @@ exports.register = function (plugin, options, next) {
 };
 
 exports.register.attributes = {
-  name: 'index'
+  name: 'index',
+  dependencies: 'visionary'
 };

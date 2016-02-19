@@ -1,60 +1,58 @@
-var Joi = require('joi');
-var uuid = require('node-uuid');
-var async = require('async');
-var mongoose = require('mongoose');
+const Joi = require('joi');
+const async = require('async');
+const ObjectAssign = require('object-assign');
+const BaseModel = require('hapi-mongo-models').BaseModel;
 
-var User = function () {
-};
-
-// User schema for mongo db
-User.Schema = mongoose.Schema({
-    userId: { type: Number, unique: true, index: true},
-    username: { type: String, unique: true },
-    displayName: String,
-    email: { type: String, unique: true },
-    avatar: String,
-    created: Date
+const User = BaseModel.extend({
+    constructor: function (attrs) {
+        ObjectAssign(this, attrs);
+    }
 });
 
-// Validator for user schema - checks that all values are whats expected
-User.Schema.method.validate = function(obj) {
-  var schema = {
-    userId: Joi.number(),
-    username: Joi.string().required(),
-    displayName: Joi.string(),
-    email: Joi.string(),
-    avatar: Joi.string(),
-    created: Joi.date()
-  };
-  return Joi.validate(obj, schema);
-};
+User._collection = 'Users';
 
-User.Model = mongoose.model('users', User.Schema);
-User.ensureIndexes = User.Model.ensureIndexes();
+User.schema = Joi.object().keys({
+  userId: Joi.number(),
+  username: Joi.string().required(),
+  displayname: Joi.string(),
+  email: Joi.string(),
+  avatar: Joi.string(),
+  created: Joi.date(),
+  online: Joi.boolean(),
+  connection: Joi.string()
+});
 
-// Create new user in database from (github)auth values
-User.create = function (auth, callback) {
+User.indexes = [
+    { key: { 'userId': 1, unique: true } },
+    { key: { 'username': 1, unique: true } },
+    { key: { 'email': 1, unique: true } }
+];
 
-    var self = this;
+// Create and save User to database.
+User.create = function(auth, connection, callback) {
+
+    const self = this;
 
     async.auto({
-        newUser: function (done, results) {
-            var document = {
+        newUser: (done) => {
+
+            const doc = {
                 userId: auth.id,
                 username: auth.login,
-                displayName: auth.name,
+                displayname: auth.name,
                 email: auth.email,
                 avatar: auth.avatar_url,
-                created: new Date()
+                created: new Date(),
+                online: true,
+                connection: connection
             };
 
-            var user = new User.Model(document);
-            user.save(done);
+            self.insertOne(doc, done);
         }
-    }, function (err, results) {
+    }, (err, results) => {
 
         if (err) {
-            return callback(err);
+          return callback(err);
         }
 
         callback(null, results.newUser[0]);
@@ -65,14 +63,13 @@ User.create = function (auth, callback) {
 User.findByUsername = function (username, callback) {
 
     var query = { username: username };
-    User.Model.findOne(query, callback);
+    this.findOne(query, callback);
 };
 
 // Find user by id
 User.findByUserId = function (userid, callback) {
     var query = { userId: userid };
-    User.Model.findOne(query, callback);
+    this.findOne(query, callback);
 };
-
 
 module.exports = User;

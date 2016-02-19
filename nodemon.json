@@ -1,0 +1,11 @@
+{
+  "restartable": "rs",
+  "colours": true,
+  "watch": ["server/**/*.{js,jsx}"],
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules",
+    "client/**/*.*"
+  ],
+  "ext": "js json jsx"
+}

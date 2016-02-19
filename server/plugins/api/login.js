@@ -1,84 +1,92 @@
-var Joi = require('joi');
-var Hoek = require('hoek');
+'use strict';
 
-// Routes for login
-exports.register = function (plugin, options, next) {
+const Joi = require('joi');
 
-    options = Hoek.applyToDefaults({ basePath: '' }, options);
+const internals = {};
+const config = require('../../../config');
 
-    plugin.route({
-        method: ['GET', 'POST'],
-        path: options.basePath + '/login',
+internals.applyRoutes = function (server, next) {
+
+    const User = server.plugins['hapi-mongo-models'].User;
+    const io = server.plugins['hapi-io'].io;
+
+    server.route({
+      method: ['GET', 'POST'],
+        path: '/login',
         config: {
           auth: 'github',
           pre: [{
             assign: 'user',
-            method: function (request, reply) {
-              var account = request.auth.credentials;
-              var sid = account.profile.id.toString();
-              var auth = account.profile.raw;
-              var User = request.server.plugins.models.User;
-              var io = request.server.plugins.hapio.io;
-              User.findByUserId(sid, function (err, user) {
+            method: (request, reply) => {
+              let account = request.auth.credentials;
+              let sid = account.profile.id;
+              let auth = account.profile.raw;
+
+              User.findByUserId(sid, (err, user) => {
                 if (err) {
-                  return reply(err);
+                  return reply('Error finding user:', err);
                 }
 
                 if (user === null) {
-                  User.create(auth, function (err, created) {
+                  User.create(auth, (err, created) => {
                     if (err) {
-                      return reply(err);
+                      return reply('Error creating a new user:', err);
                     }
-                    io.emit('event:user:create', {created: created});
 
-                    return reply(created);
-                  });
+                    return io.emit('user:created', { newUser: created }), reply(created);
+                  })
                 } else {
                   return reply(user);
                 }
-
               });
             }
-          }]
-        },
-        handler: function(request, reply) {
-          request.session.set('weiner-auth', request.pre.user);
-          return reply(request.session.get('weiner-auth')).redirect('#/weiner');
+          }],
+          handler: (request, reply) => {
+            request.yar.set(config.session.name, request.pre.user);
+
+            return reply(request.yar.get(config.session.name)).redirect('/weiner');
+          }
         }
     });
 
-    plugin.route({
-      method: 'GET',
-      path: options.basePath + '/weiner',
-      handler: function(request, reply) {
-
-        if(!request.session.get('weiner-auth') && !request.auth.isAuthenticated) {
-          return reply.redirect('/');
+    server.route({
+      method: 'POST',
+      path: '/logout',
+      config: {
+        plugins: {
+          'hapi-io': 'disconnect'
         }
-        var io = request.server.plugins.hapio.io;
-        io.emit('event:user:auth', {user: request.session.get('weiner-auth')});
+      },
+      handler: (request, reply) => {
 
-        io.on('event:weiner:save', function(socket) {
-          socket.emit('event:user:auth', {user: request.session.get('weiner-auth')});
-        });
+        if (request.yar.get(config.session.name)) {
+          const loggedUser = request.yar.get(config.session.name)._id;
 
-        io.on('event:weiner:get', function(socket) {
-          socket.emit('event:user:auth', {user: request.session.get('weiner-auth')});
-        });
+          const update = {
+            online: false
+          };
 
-        return reply(request.session.get('weiner-auth'));
+          User.findByIdAndUpdate(loggedUser, { $set: update }, (err, user) => {
+            if (err) {
+              return io.emit('user:error', err);
+            }
+
+            request.yar.reset();
+            return reply.redirect('/'), io.emit('user:offline', { userOffline: user });
+          });
+
+        }
       }
     });
 
-    plugin.route({
-      method: 'GET',
-      path: options.basePath + '/logout',
-      handler: function(request, reply) {
-        request.session.reset();
-        return reply.redirect('/');
-      }
-    });
 
+    next();
+};
+
+
+exports.register = function (server, options, next) {
+
+    server.dependency(['yar', 'hapi-mongo-models'], internals.applyRoutes);
 
     next();
 };

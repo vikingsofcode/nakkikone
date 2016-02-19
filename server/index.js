@@ -1,58 +1,80 @@
-var Hapi      = require('hapi'),
-    path      = require('path');
+import Hapi from 'hapi';
+import Glue from 'glue';
+import path from 'path';
 
-var composeOptions = {
-    relativeTo: __dirname
+const config = require('../config');
+
+const composeOptions = {
+  relativeTo: __dirname
 };
 
-var manifest = {
-  servers: [
-    {
-      host: 'localhost',
-      port: 6679,
-      options: {
-        labels: ['web'],
-        security: true,
-        debug: {
-          request: ['error']
-        }
+const manifest = {
+  server: {
+    debug: {
+      request: ['error']
+    },
+    connections: {
+      routes: {
+        security: true
+      },
+      router: {
+        stripTrailingSlash: true
       }
+    }
+  },
+  connections: [
+    {
+      port: config.server.port,
+      labels: ['web']
     }
   ],
   plugins: {
-    'bell': {},
+    'lout': {},
+    'inert': {},
+    'vision': {},
+    'visionary': {
+      engines: {
+          jsx: require('hapi-react-views')
+      },
+      path: path.join(__dirname, 'views')
+    },
+    'hapi-mongo-models': {
+      mongodb: {
+        url: config.mongodb.url
+      },
+      models: {
+        Weiner: './server/models/weiner',
+        User: './server/models/user'
+      },
+      autoIndex: true
+    },
+    'hapi-io': {},
     'hapi-auth-cookie': {},
+    'bell': {},
     'yar': {
-      name: 'weiner-session',
+      name: config.session.name,
       cache: {
         expiresIn: 24 * 60 * 60 * 1000
       },
       cookieOptions: {
-        password: 'weiner-auth',
+        password: config.session.cookiepwd,
         isSecure: false
       }
     },
-    'visionary': {
-      engines: { jade: 'jade' },
-      path: path.join(__dirname, '../client/')
-    },
-    'hapio': {},
     './plugins/auth': {},
-    './plugins/models': {},
-    './plugins/api/login': { basePath: '/api' },
-    './plugins/api/user': { basePath: '/api' },
-    './plugins/api/weiner': { basePath: '/api' },
-    './plugins/web/index': {}
+    './plugins/api/weiner': [{ select: ['web'] }],
+    './plugins/api/login': [{ select: ['web'] }],
+    './plugins/api/user': [{ select: ['web'] }],
+    './plugins/web/index': [{ select: ['web'] }]
   }
 };
 
-Hapi.Pack.compose(manifest, composeOptions, function(err, pack) {
-  pack.start(function() {
-    var io = pack.plugins.hapio.io;
-    io.on('connection', function(socket) {
-      socket.emit('event:connect', {msg: 'lulz'});
-      console.log(socket.id + " connected!");
-    });
-    console.log('Hapi server started');
+Glue.compose(manifest, composeOptions, function (err, server) {
+  if(err) {
+    throw err;
+  }
+
+  server.start(() => {
+    console.log('Server started');
   });
 });
